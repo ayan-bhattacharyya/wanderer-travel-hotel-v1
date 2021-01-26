@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.ayan.wander-travel</groupId>
-	<artifactId>hotel</artifactId>
+	<artifactId>hotel-application-v1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>hotel</name>
 	<description>Spring Boot Application for Wanderer Travel Hotel</description>

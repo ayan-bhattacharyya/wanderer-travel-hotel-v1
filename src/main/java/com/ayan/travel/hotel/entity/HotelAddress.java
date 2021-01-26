@@ -25,10 +25,10 @@ public class HotelAddress {
 	@JoinColumn(name= "hotel_id")
 	private Hotel hotel;
 	
-	@Column(name = "address_type")
+	@Column(name = "address_type", nullable = false)
 	private AddressType adressType;
 	
-	@Column(name = "address_line_1")
+	@Column(name = "address_line_1", nullable = false)
 	private String addressLine1;
 	
 	@Column(name = "address_line_2")
@@ -40,16 +40,19 @@ public class HotelAddress {
 	@Column(name = "address_line_4")
 	private String addressLine4;
 	
-	@Column(name = "state")
+	@Column(name = "state", nullable = false)
 	private String state;
 	
-	@Column(name = "postcode")
+	@Column(name = "postcode", nullable = false)
 	private String postCode;
 	
-	@Column(name = "created_at")
+	@Column(name = "country", nullable = false)
+	private String country;
+	
+	@Column(name = "created_at", nullable = false)
 	private String createdAt;
 	
-	@Column(name = "created_by")
+	@Column(name = "created_by", nullable = false)
 	private String createdBy;
 	
 	@Column(name = "modified_at")
@@ -128,6 +131,14 @@ public class HotelAddress {
 
 	public void setPostCode(String postCode) {
 		this.postCode = postCode;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
 	}
 
 	public String getCreatedAt() {

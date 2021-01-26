@@ -25,16 +25,16 @@ public class HotelContact {
 	@JoinColumn(name= "hotel_id")
 	private Hotel hotel;
 	
-	@Column(name = "contact_type")
+	@Column(name = "contact_type", nullable = false)
 	private ContactType contactType;
 	
-	@Column(name = "contact_value")
+	@Column(name = "contact_value", nullable = false)
 	private String contactValue;
 	
-	@Column(name = "created_at")
+	@Column(name = "created_at", nullable = false)
 	private String createdAt;
 	
-	@Column(name = "created_by")
+	@Column(name = "created_by", nullable = false)
 	private String createdBy;
 	
 	@Column(name = "modified_at")

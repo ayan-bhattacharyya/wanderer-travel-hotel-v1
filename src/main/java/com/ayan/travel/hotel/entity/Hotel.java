@@ -19,19 +19,19 @@ public class Hotel {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long hotelId;
 	
-	@Column(name = "hotel_code")
+	@Column(name = "hotel_code", unique = true, nullable = false)
 	private String hotelCode;
 	
-	@Column(name = "hotel_name")
+	@Column(name = "hotel_name", nullable = false)
 	private String hotelName;
 	
-	@Column(name = "status")
+	@Column(name = "status", nullable = false)
 	private Status status;
 	
-	@Column(name = "created_at")
+	@Column(name = "created_at", nullable = false)
 	private String createdAt;
 	
-	@Column(name = "created_by")
+	@Column(name = "created_by", nullable = false)
 	private String createdBy;
 	
 	@Column(name = "modified_at")

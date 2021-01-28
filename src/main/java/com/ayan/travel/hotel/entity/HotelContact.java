@@ -1,5 +1,8 @@
 package com.ayan.travel.hotel.entity;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,8 +17,10 @@ import com.ayan.travel.hotel.domain.ContactType;
 
 @Entity
 @Table(name = "hotel_contact")
-public class HotelContact {
+public class HotelContact implements Serializable {
 	
+	private static final long serialVersionUID = -3511707557787401229L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "contact_id")
@@ -42,6 +47,25 @@ public class HotelContact {
 	
 	@Column(name = "modified_by")
 	private String modifiedBy;
+
+	public HotelContact(Hotel hotel, ContactType contactType, String contactValue, String createdAt, String createdBy,
+			String modifiedAt, String modifiedBy) {
+		this.hotel = hotel;
+		this.contactType = contactType;
+		this.contactValue = contactValue;
+		this.createdAt = createdAt;
+		this.createdBy = createdBy;
+		this.modifiedAt = modifiedAt;
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public HotelContact(Hotel hotel, ContactType contactType, String contactValue, String createdAt, String createdBy) {
+		this.hotel = hotel;
+		this.contactType = contactType;
+		this.contactValue = contactValue;
+		this.createdAt = createdAt;
+		this.createdBy = createdBy;
+	}
 
 	public Long getContactId() {
 		return contactId;
@@ -108,9 +132,40 @@ public class HotelContact {
 	}
 	
 	
+	@Override
+	public String toString() {
+		return "Hotel Contact{" +
+                ", Hotel Code ='" + hotel.getHotelCode() + '\'' +
+                ", Hotel Name ='" + hotel.getHotelName() + '\'' +
+                ", Hotel Contact Id ='" + contactId + '\'' +
+                ", Hotel Contact Type ='" + contactType + '\'' +
+                ", Hotel Contact Value ='" + contactValue + '\'' +
+                ", Created at ='" + createdAt + '\'' +
+                ", Created by ='" + createdBy + '\'' +
+                ", Modified at ='" + modifiedAt + '\'' +
+                ", Modified by ='" + modifiedBy + '\'' +
+                '}';
+	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
+		HotelContact hotelContact = (HotelContact) o;
+		return Objects.equals(contactId, hotelContact.contactId) && 
+				Objects.equals(hotel, hotelContact.hotel) &&
+				contactType == hotelContact.contactType &&
+				Objects.equals(contactValue, hotelContact.contactValue) &&
+				Objects.equals(createdAt, hotelContact.createdAt) &&
+				Objects.equals(createdBy, hotelContact.createdBy) &&
+				Objects.equals(modifiedAt, hotelContact.modifiedAt) &&
+				Objects.equals(modifiedBy, hotelContact.modifiedBy);
+	}
 	
-	
-	
+	@Override
+    public int hashCode() {
+        return Objects.hash(contactId, hotel, contactType, contactValue,
+        		createdAt, createdBy, modifiedAt, modifiedBy);
+    }
 
 }

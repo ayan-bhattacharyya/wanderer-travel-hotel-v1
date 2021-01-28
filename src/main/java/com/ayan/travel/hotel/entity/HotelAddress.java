@@ -1,5 +1,8 @@
 package com.ayan.travel.hotel.entity;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,8 +17,10 @@ import com.ayan.travel.hotel.domain.AddressType;
 
 @Entity
 @Table(name= "hotel_address")
-public class HotelAddress {
+public class HotelAddress implements Serializable {
 	
+	private static final long serialVersionUID = 1740869414999752409L;
+
 	@Id
 	@Column(name = "address_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +31,7 @@ public class HotelAddress {
 	private Hotel hotel;
 	
 	@Column(name = "address_type", nullable = false)
-	private AddressType adressType;
+	private AddressType addressType;
 	
 	@Column(name = "address_line_1", nullable = false)
 	private String addressLine1;
@@ -44,7 +49,7 @@ public class HotelAddress {
 	private String state;
 	
 	@Column(name = "postcode", nullable = false)
-	private String postCode;
+	private String postcode;
 	
 	@Column(name = "country", nullable = false)
 	private String country;
@@ -60,6 +65,42 @@ public class HotelAddress {
 	
 	@Column(name = "modified_by")
 	private String modifiedBy;
+	
+	
+
+	public HotelAddress(Hotel hotel, AddressType addressType, String addressLine1, String addressLine2,
+			String addressLine3, String addressLine4, String state, String postcode, String country, String createdAt,
+			String createdBy, String modifiedAt, String modifiedBy) {
+		this.hotel = hotel;
+		this.addressType = addressType;
+		this.addressLine1 = addressLine1;
+		this.addressLine2 = addressLine2;
+		this.addressLine3 = addressLine3;
+		this.addressLine4 = addressLine4;
+		this.state = state;
+		this.postcode = postcode;
+		this.country = country;
+		this.createdAt = createdAt;
+		this.createdBy = createdBy;
+		this.modifiedAt = modifiedAt;
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public HotelAddress(Hotel hotel, AddressType addressType, String addressLine1, String addressLine2,
+			String addressLine3, String addressLine4, String state, String postcode, String country, String createdAt,
+			String createdBy) {
+		this.hotel = hotel;
+		this.addressType = addressType;
+		this.addressLine1 = addressLine1;
+		this.addressLine2 = addressLine2;
+		this.addressLine3 = addressLine3;
+		this.addressLine4 = addressLine4;
+		this.state = state;
+		this.postcode = postcode;
+		this.country = country;
+		this.createdAt = createdAt;
+		this.createdBy = createdBy;
+	}
 
 	public Long getAddressId() {
 		return addressId;
@@ -77,12 +118,12 @@ public class HotelAddress {
 		this.hotel = hotel;
 	}
 
-	public AddressType getAdressType() {
-		return adressType;
+	public AddressType getAddressType() {
+		return addressType;
 	}
 
-	public void setAdressType(AddressType adressType) {
-		this.adressType = adressType;
+	public void setAddressType(AddressType addressType) {
+		this.addressType = addressType;
 	}
 
 	public String getAddressLine1() {
@@ -125,12 +166,12 @@ public class HotelAddress {
 		this.state = state;
 	}
 
-	public String getPostCode() {
-		return postCode;
+	public String getPostcode() {
+		return postcode;
 	}
 
-	public void setPostCode(String postCode) {
-		this.postCode = postCode;
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
 	}
 
 	public String getCountry() {
@@ -173,5 +214,52 @@ public class HotelAddress {
 		this.modifiedBy = modifiedBy;
 	}
 	
+	@Override
+	public String toString() {
+		return "Hotel Address{" +
+                ", Hotel Code ='" + hotel.getHotelCode() + '\'' +
+                ", Hotel Name ='" + hotel.getHotelName() + '\'' +
+                ", Hotel Address Id ='" + addressId + '\'' +
+                ", Hotel Address Type ='" + addressType + '\'' +
+                ", Hotel Address Line 1 ='" + addressLine1 + '\'' +
+                ", Hotel Address Line 2 ='" + addressLine2 + '\'' +
+                ", Hotel Address Line 3 ='" + addressLine3+ '\'' +
+                ", Hotel Address Line 4 ='" + addressLine4 + '\'' +
+                ", State ='" + state + '\'' +
+                ", Postcode ='" + postcode + '\'' +
+                ", Country ='" + country + '\'' +
+                ", Created at ='" + createdAt + '\'' +
+                ", Created by ='" + createdBy + '\'' +
+                ", Modified at ='" + modifiedAt + '\'' +
+                ", Modified by ='" + modifiedBy + '\'' +
+                '}';
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
+		HotelAddress hotelAddress = (HotelAddress) o;
+		return Objects.equals(addressId, hotelAddress.addressId) && 
+				Objects.equals(hotel, hotelAddress.hotel) &&
+				addressType == hotelAddress.addressType &&
+				Objects.equals(addressLine1, hotelAddress.addressLine1) &&
+				Objects.equals(addressLine2, hotelAddress.addressLine2) &&
+				Objects.equals(addressLine3, hotelAddress.addressLine3) &&
+				Objects.equals(addressLine4, hotelAddress.addressLine4) &&
+				Objects.equals(state, hotelAddress.state) &&
+				Objects.equals(postcode, hotelAddress.postcode) &&
+				Objects.equals(country, hotelAddress.country) &&
+				Objects.equals(createdAt, hotelAddress.createdAt) &&
+				Objects.equals(createdBy, hotelAddress.createdBy) &&
+				Objects.equals(modifiedAt, hotelAddress.modifiedAt) &&
+				Objects.equals(modifiedBy, hotelAddress.modifiedBy);
+	}
+	
+	@Override
+    public int hashCode() {
+        return Objects.hash(addressId, hotel, addressType, addressLine1, addressLine2, addressLine3, addressLine4,
+        		state, postcode, country, createdAt, createdBy, modifiedAt, modifiedBy);
+    }
 	
 }

@@ -1,5 +1,7 @@
 package com.ayan.travel.hotel.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,8 +17,10 @@ import com.ayan.travel.hotel.domain.Status;
 
 @Entity
 @Table(name= "room")
-public class Room {
+public class Room implements Serializable{
 	
+	private static final long serialVersionUID = -4055371429256019034L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long roomId;

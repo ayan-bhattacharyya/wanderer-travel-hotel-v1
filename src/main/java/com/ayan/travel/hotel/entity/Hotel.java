@@ -4,6 +4,9 @@ import javax.persistence.Table;
 
 import com.ayan.travel.hotel.domain.Status;
 
+import java.io.Serializable;
+import java.util.Objects;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,8 +15,10 @@ import javax.persistence.Id;
 
 @Entity
 @Table(name="hotel")
-public class Hotel {
+public class Hotel implements Serializable{
 	
+	private static final long serialVersionUID = 2132956606968141760L;
+
 	@Id
 	@Column(name = "hotel_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,6 +44,26 @@ public class Hotel {
 	
 	@Column(name = "modified_by")
 	private String modifiedBy;
+	
+
+	public Hotel(String hotelCode, String hotelName, Status status, String createdAt, String createdBy,
+			String modifiedAt, String modifiedBy) {
+		this.hotelCode = hotelCode;
+		this.hotelName = hotelName;
+		this.status = status;
+		this.createdAt = createdAt;
+		this.createdBy = createdBy;
+		this.modifiedAt = modifiedAt;
+		this.modifiedBy = modifiedBy;
+	}
+	
+	public Hotel(String hotelCode, String hotelName, Status status, String createdAt, String createdBy) {
+		this.hotelCode = hotelCode;
+		this.hotelName = hotelName;
+		this.status = status;
+		this.createdAt = createdAt;
+		this.createdBy = createdBy;
+	}
 
 	public Long getHotelId() {
 		return hotelId;
@@ -103,6 +128,42 @@ public class Hotel {
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
+	
+	@Override
+	public String toString() {
+		return "Hotel{" +
+                "Hotel Id ='" + hotelId + '\'' +
+                ", Hotel Code ='" + hotelCode + '\'' +
+                ", Hotel Name ='" + hotelName + '\'' +
+                ", Status ='" + status + '\'' +
+                ", Created at ='" + createdAt + '\'' +
+                ", Created by ='" + createdBy + '\'' +
+                ", Modified at ='" + modifiedAt + '\'' +
+                ", Modified by ='" + modifiedBy + '\'' +
+                '}';
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
+		Hotel hotel = (Hotel) o;
+		return Objects.equals(hotelId, hotel.hotelId) && 
+				Objects.equals(hotelCode, hotel.hotelCode) &&
+				Objects.equals(hotelName, hotel.hotelName) &&
+				status == hotel.status  &&
+				Objects.equals(createdAt, hotel.createdAt) &&
+				Objects.equals(createdBy, hotel.createdBy) &&
+				Objects.equals(modifiedAt, hotel.modifiedAt) &&
+				Objects.equals(modifiedBy, hotel.modifiedBy);
+	}
+	
+	@Override
+    public int hashCode() {
+        return Objects.hash(hotelId, hotelCode, hotelName, status, createdAt, createdBy, modifiedAt, modifiedBy);
+    }
+	
+	
 	
 
 }

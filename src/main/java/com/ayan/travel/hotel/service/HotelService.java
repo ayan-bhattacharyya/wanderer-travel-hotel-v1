@@ -3,11 +3,13 @@ package com.ayan.travel.hotel.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 
 import com.ayan.travel.hotel.domain.AddressType;
 import com.ayan.travel.hotel.domain.ContactType;
-import com.ayan.travel.hotel.domain.dto.HotelDTO;
+import com.ayan.travel.hotel.domain.dto.HotelRequestDTO;
 import com.ayan.travel.hotel.domain.Status;
 import com.ayan.travel.hotel.entity.Hotel;
 import com.ayan.travel.hotel.entity.HotelAddress;
@@ -36,140 +38,432 @@ public class HotelService {
 		this.dateTimeService = dateTimeService;
 	}
 	
-	public Map<Boolean, String> createHotelDetails(HotelDTO input) {
+	public Map<Hotel, Map<HttpStatus, String>> createHotel(HotelRequestDTO input) {
 		
-		Map<Boolean, String> response = new HashMap<Boolean, String>();
+		Map<HttpStatus, String> httpResoponse = new HashMap<HttpStatus, String>();
+		Map<Hotel, Map<HttpStatus, String>> methodResponse = new HashMap<Hotel, Map<HttpStatus, String>>();
+		
 		String createdAt = dateTimeService.getDateTime(DATE_FORMATTER);
 		
-		HotelAddress newHotelAddress = null;
-		HotelContact newHotelContact = null;
+		if(StringUtils.isBlank(input.getHotelCode())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel code' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getHotelName())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel name' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getResponsibleUser())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'User' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
 		
 		if(findHotelByCode(input.getHotelCode()) != null) {
-			response.put(Boolean.FALSE, "Hotel with hotel code " + input.getHotelCode() + " already exists");
-			return response;
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel with hotel code " + input.getHotelCode() + " already exists");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
 		}
 		
-		Hotel newHotel =  createHotel(input.getHotelCode(), input.getHotelName(), Status.A, createdAt, 
-				input.getResponsibleUser());	
-		if(newHotel == null) {
-			response.put(Boolean.FALSE, "Create Hotel operation failed");
-			return response;
-		}
-		
-		newHotelAddress = createHotelAddress(newHotel,
-				AddressType.valueOfLabel(input.getAddressType()), input.getAddressLine1(), 
-				input.getAddressLine2(), input.getAddressLine3(), input.getAddressLine4(), 
-				input.getState(), input.getPostcode(), input.getCountry(),
-				createdAt, input.getResponsibleUser());
-		if(newHotelAddress == null) {
-			response.put(Boolean.FALSE, "Create Hotel address operation failed");
-			return response;
-		}
-						
-		newHotelContact = createHotelContact(newHotel, 
-				ContactType.valueOfLabel(input.getContactType()), input.getContactValue(),
-				createdAt, input.getResponsibleUser());
-		if(newHotelContact == null) {
-			response.put(Boolean.FALSE, "Create Hotel contact operation failed");
-			return response;
-		}
-		
-		response.put(Boolean.TRUE, "create Hotel operation successful");
-		return response;
+		Hotel newHotel =  hotelRepository.save(new Hotel(input.getHotelCode(), input.getHotelName(), Status.A, createdAt, 
+				input.getResponsibleUser()));
+		httpResoponse.put(HttpStatus.CREATED, "");
+		methodResponse.put(newHotel, httpResoponse);
+		return methodResponse;
 	}
 	
-	public Map<Boolean, String> updateHotelDetails(HotelDTO input) {
-		String dateTime = dateTimeService.getDateTime(DATE_FORMATTER);
-		Map<Boolean, String> response = new HashMap<Boolean, String>();
+	public Map<HotelAddress, Map<HttpStatus, String>> createHotelAddress(HotelRequestDTO input) {
+		Map<HttpStatus, String> httpResoponse = new HashMap<HttpStatus, String>();
+		Map<HotelAddress, Map<HttpStatus, String>> methodResponse = new HashMap<HotelAddress, Map<HttpStatus, String>>();
 		
-		Hotel existingHotel = null;
-		Hotel updatedHotel = null;
-		HotelAddress hotelAddress = null;
-		HotelContact hotelContact = null;
+		String createdAt = dateTimeService.getDateTime(DATE_FORMATTER);
 		
-		existingHotel = findHotelByCode(input.getHotelCode());
-		if(existingHotel == null) {
-			response.put(Boolean.FALSE, "There is no hotel exists with the hotel code " + input.getHotelCode());
-			return response;
+		if(StringUtils.isBlank(input.getHotelCode())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel code' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getAddressType())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address type' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getAddressLine1())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address line 1' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getAddressLine4())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address line 4' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getState())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address state' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getPostcode())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address postcode' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getCountry())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address country' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getResponsibleUser())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'User' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		Hotel hotel = findHotelByCode(input.getHotelCode());
+		if(hotel == null) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel with hotel code " + input.getHotelCode() + " doesn't exists");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		HotelAddress hotelAddress = findHotelAddressByAddressType(hotel, 
+				AddressType.valueOfLabel(input.getAddressType()));
+		if(hotelAddress != null) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel address with hotel code " + input.getHotelCode() 
+			+" and address type " + input.getAddressType() + "already exists");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		HotelAddress newHotelAddress = hotelAddressRepository.save(new HotelAddress(hotel, 
+				AddressType.valueOfLabel(input.getAddressType()), 
+				input.getAddressLine1(), input.getAddressLine2(), input.getAddressLine3(), 
+				input.getAddressLine4(),input.getState(), input.getPostcode(), input.getCountry(), 
+				createdAt, input.getResponsibleUser()));
+		httpResoponse.put(HttpStatus.CREATED, "");
+		methodResponse.put(newHotelAddress, httpResoponse);
+		return methodResponse;
+	}
+						
+	public Map<HotelContact, Map<HttpStatus, String>> createHotelContact(HotelRequestDTO input) {
+		
+		Map<HttpStatus, String> httpResoponse = new HashMap<HttpStatus, String>();
+		Map<HotelContact, Map<HttpStatus, String>> methodResponse = new HashMap<HotelContact, Map<HttpStatus, String>>();
+		
+		String createdAt = dateTimeService.getDateTime(DATE_FORMATTER);
+		
+		if(StringUtils.isBlank(input.getHotelCode())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel code' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getContactType())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel contact type' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getContactValue())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel contact value' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getResponsibleUser())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'User' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		Hotel hotel = findHotelByCode(input.getHotelCode());
+		if(hotel == null) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel with hotel code " + input.getHotelCode() + " doesn't exists");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		HotelContact hotelContact = findHotelContactByContactType(hotel, ContactType.valueOfLabel(input.getContactType()));
+		if(hotelContact != null) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel address with hotel code " + input.getHotelCode() 
+			+" and contact type " + input.getContactType() + "already exists");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		HotelContact newHotelContact = hotelContactRepository.save(new HotelContact(hotel, 
+				ContactType.valueOfLabel(input.getContactType()), 
+				input.getContactValue(), createdAt, input.getResponsibleUser()));
+		httpResoponse.put(HttpStatus.CREATED, "");
+		methodResponse.put(newHotelContact, httpResoponse);
+		return methodResponse;
+		
+	}
+	
+	public Map<Hotel, Map<HttpStatus, String>> updateHotel(HotelRequestDTO input) {
+		String updatedAt = dateTimeService.getDateTime(DATE_FORMATTER);
+
+		Map<HttpStatus, String> httpResoponse = new HashMap<HttpStatus, String>();
+		Map<Hotel, Map<HttpStatus, String>> methodResponse = new HashMap<Hotel, Map<HttpStatus, String>>();
+		
+		if(StringUtils.isBlank(input.getHotelCode())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel code' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getHotelName())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel name' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getResponsibleUser())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'User' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		Hotel hotel = findActiveHotelByCode(input.getHotelCode());
+		
+		if(hotel == null) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel with hotel code " + input.getHotelCode() + " doesn't exist or the hotel is currectly not active");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		} else if(! hotel.getModifiedAt().equalsIgnoreCase(input.getModifiedAt())){
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel with hotel code " + input.getHotelCode() + " details has already been updated by other user/resouce");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
 		} else {
-			updatedHotel = updateHotel(existingHotel, input.getHotelName(), dateTime, input.getResponsibleUser());	
-			if(updatedHotel == null) {
-				response.put(Boolean.FALSE, "Update Hotel operation failed");
-				return response;
-			}
+			hotel.setHotelName(input.getHotelName());
+			hotel.setModifiedAt(updatedAt);
+			hotel.setModifiedBy(input.getResponsibleUser());
+			Hotel updatedHotel = hotelRepository.save(hotel);
+			
+			httpResoponse.put(HttpStatus.OK, "");
+			methodResponse.put(updatedHotel, httpResoponse);
+			return methodResponse;
 		}
 		
-		HotelAddress existingHotelAddress = findHotelAddressByHotelAndAddressType(existingHotel, AddressType.valueOfLabel(input.getAddressType()));
-		if(existingHotelAddress == null) {
-			hotelAddress = createHotelAddress(existingHotel, AddressType.valueOfLabel(input.getAddressType()), input.getAddressLine1(),
-					input.getAddressLine2(), input.getAddressLine3(), input.getAddressLine4(), input.getState(), 
-					input.getPostcode(), input.getCountry(), dateTime, input.getResponsibleUser());
-		} else {
-			hotelAddress = updateHotelAddress(existingHotelAddress, input.getAddressLine1(),
-					input.getAddressLine2(), input.getAddressLine3(), input.getAddressLine4(), input.getState(), 
-					input.getPostcode(), input.getCountry(), dateTime, input.getResponsibleUser());
+	}
+	
+	public Map<HotelAddress, Map<HttpStatus, String>> updateHotelAddress(HotelRequestDTO input) {
+		
+		String updatedAt = dateTimeService.getDateTime(DATE_FORMATTER);
+
+		Map<HttpStatus, String> httpResoponse = new HashMap<HttpStatus, String>();
+		Map<HotelAddress, Map<HttpStatus, String>> methodResponse = new HashMap<HotelAddress, Map<HttpStatus, String>>();
+		
+		if(StringUtils.isBlank(input.getHotelCode())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel code' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
 		}
 		
-		if(hotelAddress == null) {
-			response.put(Boolean.FALSE, "Update Hotel address operation failed");
-			return response;
+		if(StringUtils.isBlank(input.getAddressType())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address type' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
 		}
 		
-		HotelContact existingHotelContact = findHotelContactByHotelAndContactType(existingHotel, ContactType.valueOfLabel(input.getContactType()));
-		
-		if(existingHotelContact == null) {
-			hotelContact = createHotelContact(existingHotel, ContactType.valueOfLabel(input.getContactType()), input.getContactValue(), 
-					dateTime, input.getResponsibleUser());
-		} else {
-			hotelContact = updateHotelContact(existingHotelContact, input.getContactValue(),
-					dateTime, input.getResponsibleUser());
+		if(StringUtils.isBlank(input.getAddressLine1())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address line 1' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
 		}
 		
-		if(hotelContact == null) {
-			response.put(Boolean.FALSE, "Update Hotel Contact operation failed");
-			return response;
+		if(StringUtils.isBlank(input.getAddressLine4())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address line 4' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getState())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address state' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getPostcode())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address postcode' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getCountry())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel address country' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getResponsibleUser())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'User' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		Hotel hotel = findActiveHotelByCode(input.getHotelCode());
+		
+		if(hotel == null) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel with hotel code " + input.getHotelCode() + " doesn't exist or the hotel is currectly not active");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
 		} 
 		
-		response.put(Boolean.TRUE, "Hotel update successful");
-		return response;
+		HotelAddress hotelAddress = findHotelAddressByAddressType(hotel, 
+				AddressType.valueOfLabel(input.getAddressType()));
+		if(hotelAddress == null) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel address with hotel code " + input.getHotelCode() 
+			+" and address type " + input.getAddressType() + "doesn't exist");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		} else if(! hotelAddress.getModifiedAt().equalsIgnoreCase(input.getModifiedAt())){
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel Address with hotel code " + input.getHotelCode() + " details has already been updated by other user/resouce");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		} else {
+			hotelAddress.setAddressLine1(input.getAddressLine1());
+			hotelAddress.setAddressLine2(input.getAddressLine2());
+			hotelAddress.setAddressLine3(input.getAddressLine3());
+			hotelAddress.setAddressLine4(input.getAddressLine4());
+			hotelAddress.setState(input.getState());
+			hotelAddress.setPostcode(input.getPostcode());
+			hotelAddress.setCountry(input.getCountry());
+			hotelAddress.setModifiedAt(updatedAt);
+			hotelAddress.setModifiedBy(input.getResponsibleUser());
+			
+			HotelAddress updatedHotelAddress = hotelAddressRepository.save(hotelAddress);
+			
+			httpResoponse.put(HttpStatus.OK, "");
+			methodResponse.put(updatedHotelAddress, httpResoponse);
+			return methodResponse;	
+		}
 	}
 	
-	public Hotel inactiveHotel(Hotel hotel, Status status, String modifiedAt, String modifiedBy) {
-		hotel.setStatus(status);
-		hotel.setModifiedAt(modifiedAt);
-		hotel.setModifiedBy(modifiedBy);
-		return hotelRepository.save(hotel);
+	public Map<HotelContact, Map<HttpStatus, String>> updateHotelContact(HotelRequestDTO input) {
+		
+		Map<HttpStatus, String> httpResoponse = new HashMap<HttpStatus, String>();
+		Map<HotelContact, Map<HttpStatus, String>> methodResponse = new HashMap<HotelContact, Map<HttpStatus, String>>();
+		
+		String updatedAt = dateTimeService.getDateTime(DATE_FORMATTER);
+		
+		if(StringUtils.isBlank(input.getHotelCode())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel code' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getContactType())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel contact type' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getContactValue())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'Hotel contact value' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		if(StringUtils.isBlank(input.getResponsibleUser())) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "A mandatory field 'User' is missing");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		}
+		
+		Hotel hotel = findActiveHotelByCode(input.getHotelCode());
+		
+		if(hotel == null) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel with hotel code " + input.getHotelCode() + " doesn't exist or the hotel is currectly not active");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		} 
+		
+		HotelContact hotelContact = findHotelContactByContactType(hotel, 
+				ContactType.valueOfLabel(input.getContactType()));
+		if(hotelContact == null) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel contact with hotel code " + input.getHotelCode() 
+			+" and contact type " + input.getContactType() + "doesn't exist");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		} else if(! hotelContact.getModifiedAt().equalsIgnoreCase(input.getModifiedAt())){
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel Contact with hotel code " + input.getHotelCode() + " details has already been updated by other user/resouce");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		} else {
+			hotelContact.setContactValue(input.getContactValue());
+			hotelContact.setModifiedAt(updatedAt);
+			hotelContact.setModifiedBy(input.getResponsibleUser());
+			
+			HotelContact updatedHotelConatc = hotelContactRepository.save(hotelContact);
+			
+			httpResoponse.put(HttpStatus.OK, "");
+			methodResponse.put(updatedHotelConatc, httpResoponse);
+			return methodResponse;	
+		}
 	}
 	
-	private Hotel createHotel(String hotelCode, String hotelName, Status status, String createdAt, String createdBy) {
-		return hotelRepository.save(new Hotel(hotelCode, hotelName, status, createdAt, createdBy));
+	public Map<Hotel, Map<HttpStatus, String>> inactiveHotel(HotelRequestDTO input) {
+		Map<HttpStatus, String> httpResoponse = new HashMap<HttpStatus, String>();
+		Map<Hotel, Map<HttpStatus, String>> methodResponse = new HashMap<Hotel, Map<HttpStatus, String>>();
+		
+		String updatedAt = dateTimeService.getDateTime(DATE_FORMATTER);
+		
+		Hotel hotel = findActiveHotelByCode(input.getHotelCode());
+		
+		if(hotel == null) {
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel with hotel code " + input.getHotelCode() + " doesn't exist or the hotel is currectly not active");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		} else if(! hotel.getModifiedAt().equalsIgnoreCase(input.getModifiedAt())){
+			httpResoponse.put(HttpStatus.BAD_REQUEST, "Hotel with hotel code " + input.getHotelCode() + " details has already been updated by other user/resouce");
+			methodResponse.put(null, httpResoponse);
+			return methodResponse;
+		} else {
+			hotel.setStatus(Status.I);
+			hotel.setModifiedAt(updatedAt);
+			hotel.setModifiedBy(input.getResponsibleUser());
+			
+			Hotel updatedHotel = hotelRepository.save(hotel);
+			
+			httpResoponse.put(HttpStatus.OK, "");
+			methodResponse.put(updatedHotel, httpResoponse);
+			return methodResponse;
+		}
 	}
 	
-	private HotelAddress createHotelAddress(Hotel hotel, AddressType addressType, String addressLine1, 
-			String addressLine2, String addressLine3, String addressLine4,
-			String state, String postcode, String country, String createdAt, String createdBy) {
-		return hotelAddressRepository.save(new HotelAddress(hotel, addressType, addressLine1, 
-				addressLine2, addressLine3, addressLine4, state, postcode, country,
-				createdAt, createdBy));
-	}
-	
-	private HotelContact createHotelContact(Hotel hotel, ContactType contactType, String contactValue, 
-			String createdAt, String createdBy) {
-		return hotelContactRepository.save(new HotelContact(hotel, contactType, contactValue, 
-				createdAt, createdBy));
+	private Hotel findActiveHotelByCode(String hotelCode) {	
+		if(hotelRepository.findByHotelCodeAndStatus(hotelCode, Status.A).isEmpty()) {
+			return null;
+		} else if(hotelRepository.findByHotelCodeAndStatus(hotelCode, Status.A).size() > 1){
+			throw new RuntimeException("More than one active hotel exists for the hotel code " + hotelCode);
+		} else {
+			return hotelRepository.findByHotelCodeAndStatus(hotelCode, Status.A).get(0);
+		}
 	}
 	
 	private Hotel findHotelByCode(String hotelCode) {	
 		if(hotelRepository.findByHotelCode(hotelCode).isEmpty()) {
 			return null;
 		} else if(hotelRepository.findByHotelCode(hotelCode).size() > 1){
-			throw new RuntimeException("More than one hotel exists for the hotel code " + hotelCode);
+			throw new RuntimeException("More than one active hotel exists for the hotel code " + hotelCode);
 		} else {
 			return hotelRepository.findByHotelCode(hotelCode).get(0);
 		}
 	}
 	
-	private HotelAddress findHotelAddressByHotelAndAddressType(Hotel hotel, AddressType addressType) {
+	private HotelAddress findHotelAddressByAddressType(Hotel hotel, AddressType addressType) {
 		if(hotelAddressRepository.findByHotelAndAddressType(hotel, addressType).isEmpty()) {
 			return null;
 		} else if(hotelAddressRepository.findByHotelAndAddressType(hotel, addressType).size() > 1) {
@@ -179,7 +473,7 @@ public class HotelService {
 		}
 	}
 	
-	private HotelContact findHotelContactByHotelAndContactType(Hotel hotel, ContactType contactType) {
+	private HotelContact findHotelContactByContactType(Hotel hotel, ContactType contactType) {
 		if(hotelContactRepository.findByHotelAndContactType(hotel, contactType).isEmpty()) {
 			return null;
 		} else if(hotelContactRepository.findByHotelAndContactType(hotel, contactType).size() > 1) {
@@ -188,39 +482,4 @@ public class HotelService {
 			return hotelContactRepository.findByHotelAndContactType(hotel, contactType).get(0);
 		}
 	}
-	
-	private Hotel updateHotel(Hotel hotel, String hotelName, String modifiedAt, String modifiedBy) {
-		hotel.setHotelName(hotelName);
-		hotel.setModifiedAt(modifiedAt);
-		hotel.setModifiedBy(modifiedBy);
-		return hotelRepository.save(hotel);
-	}
-	
-	private HotelAddress updateHotelAddress(HotelAddress hotelAddress, String addressLine1, 
-			String addressLine2, String addressLine3, String addressLine4,
-			String state, String postcode, String country, String modifiedAt, String modifiedBy) {
-		hotelAddress.setAddressLine1(addressLine1);
-		hotelAddress.setAddressLine2(addressLine2);
-		hotelAddress.setAddressLine3(addressLine3);
-		hotelAddress.setAddressLine4(addressLine4);
-		hotelAddress.setState(state);
-		hotelAddress.setPostcode(postcode);
-		hotelAddress.setCountry(country);
-		hotelAddress.setModifiedAt(modifiedAt);
-		hotelAddress.setModifiedBy(modifiedBy);
-		
-		return hotelAddressRepository.save(hotelAddress);
-	}
-	
-	private HotelContact updateHotelContact(HotelContact hotelContact, String contactValue, String modifiedAt, String modifiedBy) {
-		hotelContact.setContactValue(contactValue);
-		return hotelContactRepository.save(hotelContact);
-	}
-	
-	
-	
-	
-	
-	
-
 }

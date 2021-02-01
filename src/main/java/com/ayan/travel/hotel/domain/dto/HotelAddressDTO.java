@@ -2,20 +2,8 @@ package com.ayan.travel.hotel.domain.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class HotelDTO {
-	
-	@JsonProperty("EventType")
-	private String eventType;
-	
-	@JsonProperty("HotelCode")
-	private String hotelCode;
-	
-	@JsonProperty("HotelName")
-	private String hotelName;
-	
-	@JsonProperty("Status")
-	private String status;
-	
+public class HotelAddressDTO {
+
 	@JsonProperty("AddressType")
 	private String addressType;
 	
@@ -39,47 +27,6 @@ public class HotelDTO {
 	
 	@JsonProperty("Country")
 	private String country;
-	
-	@JsonProperty("ContactType")
-	private String contactType;
-	
-	@JsonProperty("ContactValue")
-	private String contactValue;
-	
-	@JsonProperty("ResponsibleUser")
-	private String responsibleUser;
-
-	public String getEventType() {
-		return eventType;
-	}
-
-	public void setEventType(String eventType) {
-		this.eventType = eventType;
-	}
-
-	public String getHotelCode() {
-		return hotelCode;
-	}
-
-	public void setHotelCode(String hotelCode) {
-		this.hotelCode = hotelCode;
-	}
-
-	public String getHotelName() {
-		return hotelName;
-	}
-
-	public void setHotelName(String hotelName) {
-		this.hotelName = hotelName;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
 
 	public String getAddressType() {
 		return addressType;
@@ -145,28 +92,4 @@ public class HotelDTO {
 		this.country = country;
 	}
 
-	public String getContactType() {
-		return contactType;
-	}
-
-	public void setContactType(String contactType) {
-		this.contactType = contactType;
-	}
-
-	public String getContactValue() {
-		return contactValue;
-	}
-
-	public void setContactValue(String contactValue) {
-		this.contactValue = contactValue;
-	}
-
-	public String getResponsibleUser() {
-		return responsibleUser;
-	}
-
-	public void setResponsibleUser(String responsibleUser) {
-		this.responsibleUser = responsibleUser;
-	}
-	
 }

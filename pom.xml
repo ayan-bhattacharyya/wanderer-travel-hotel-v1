@@ -13,9 +13,16 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>hotel</name>
 	<description>Spring Boot Application for Wanderer Travel Hotel</description>
+	
+	
 	<properties>
 		<java.version>11</java.version>
+  		<sonar.projectKey>ayan-bhattacharyya_wt-hotel-v1</sonar.projectKey>
+  		<sonar.organization>ayan-bhattacharyya</sonar.organization>
+  		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
+	
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

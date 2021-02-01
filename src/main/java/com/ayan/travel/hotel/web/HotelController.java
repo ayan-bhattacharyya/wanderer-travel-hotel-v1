@@ -1,5 +1,7 @@
 package com.ayan.travel.hotel.web;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayan.travel.hotel.domain.dto.HotelRequestDTO;
+import com.ayan.travel.hotel.entity.Hotel;
 import com.ayan.travel.hotel.service.HotelService;
 
 @RestController
@@ -28,9 +31,8 @@ public class HotelController {
 	}
 	
 	@PostMapping("/hotel")
-	@ResponseStatus(HttpStatus.CREATED)
 	public void createHotel(@RequestBody @Validated HotelRequestDTO input) {
-		hotelService.createHotel(input);
+		Map<Hotel, Map<HttpStatus, String>> response = hotelService.createHotel(input);
 	}
 	
 	@PutMapping("/hotel")

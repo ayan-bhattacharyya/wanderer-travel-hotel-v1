@@ -2,52 +2,55 @@ package com.ayan.travel.hotel.domain.dto;
 
 import java.util.List;
 
+import com.ayan.travel.hotel.entity.Hotel;
+import com.ayan.travel.hotel.entity.HotelAddress;
+import com.ayan.travel.hotel.entity.HotelContact;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class HotelResponseDTO {
 	
-	@JsonProperty("HotelCode")
-	private String hotelCode;
+	@JsonProperty("Hotel")
+	private Hotel hotel;
 	
-	@JsonProperty("HotelName")
-	private String hotelName;
+	@JsonProperty("HotelAddress")
+	private HotelAddress hotelAddress;
 	
-	@JsonProperty("HotelAddresses")
-	private List<HotelAddressDTO> addresses;
+	@JsonProperty("HotelContact")
+	private HotelContact hotelContact;
 	
-	@JsonProperty("HotelContacts")
-	private List<HotelContactDTO> contacts;
+	@JsonProperty("ErrorMessage")
+	private String errorMeesage;
 
-	public String getHotelCode() {
-		return hotelCode;
+	public Hotel getHotel() {
+		return hotel;
 	}
 
-	public void setHotelCode(String hotelCode) {
-		this.hotelCode = hotelCode;
+	public void setHotel(Hotel hotel) {
+		this.hotel = hotel;
 	}
 
-	public String getHotelName() {
-		return hotelName;
+	public HotelAddress getHotelAddress() {
+		return hotelAddress;
 	}
 
-	public void setHotelName(String hotelName) {
-		this.hotelName = hotelName;
+	public void setHotelAddress(HotelAddress hotelAddress) {
+		this.hotelAddress = hotelAddress;
 	}
 
-	public List<HotelAddressDTO> getAddresses() {
-		return addresses;
+	public HotelContact getHotelContact() {
+		return hotelContact;
 	}
 
-	public void setAddresses(List<HotelAddressDTO> addresses) {
-		this.addresses = addresses;
+	public void setHotelContact(HotelContact hotelContact) {
+		this.hotelContact = hotelContact;
 	}
 
-	public List<HotelContactDTO> getContacts() {
-		return contacts;
+	public String getErrorMeesage() {
+		return errorMeesage;
 	}
 
-	public void setContacts(List<HotelContactDTO> contacts) {
-		this.contacts = contacts;
+	public void setErrorMeesage(String errorMeesage) {
+		this.errorMeesage = errorMeesage;
 	}
 
 }

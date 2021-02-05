@@ -1,32 +1,38 @@
-package com.ayan.travel.hotel.domain.dto;
+package com.ayan.travel.hotel.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class HotelAddressDTO {
-
+public class HotelAddressRequestDTO {
+	
 	@JsonProperty("AddressType")
 	private String addressType;
-	
+
 	@JsonProperty("AddressLine1")
 	private String addressLine1;
-	
+
 	@JsonProperty("AddressLine2")
 	private String addressLine2;
-	
+
 	@JsonProperty("AddressLine3")
 	private String addressLine3;
-	
-	@JsonProperty("AddressLine4")
-	private String addressLine4;
-	
+
+	@JsonProperty("city")
+	private String city;
+
 	@JsonProperty("State")
 	private String state;
-	
+
 	@JsonProperty("Postcode")
 	private String postcode;
-	
+
 	@JsonProperty("Country")
 	private String country;
+	
+	@JsonProperty("ModifiedDateTime")
+	private String modifiedAt;
+	
+	@JsonProperty("ResponsibleUser")
+	private String responsibleUser;
 
 	public String getAddressType() {
 		return addressType;
@@ -60,12 +66,12 @@ public class HotelAddressDTO {
 		this.addressLine3 = addressLine3;
 	}
 
-	public String getAddressLine4() {
-		return addressLine4;
+	public String getCity() {
+		return city;
 	}
 
-	public void setAddressLine4(String addressLine4) {
-		this.addressLine4 = addressLine4;
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	public String getState() {
@@ -91,5 +97,22 @@ public class HotelAddressDTO {
 	public void setCountry(String country) {
 		this.country = country;
 	}
+	
+	public String getModifiedAt() {
+		return modifiedAt;
+	}
+
+	public void setModifiedAt(String modifiedAt) {
+		this.modifiedAt = modifiedAt;
+	}
+
+	public String getResponsibleUser() {
+		return responsibleUser;
+	}
+
+	public void setResponsibleUser(String responsibleUser) {
+		this.responsibleUser = responsibleUser;
+	}
+
 
 }

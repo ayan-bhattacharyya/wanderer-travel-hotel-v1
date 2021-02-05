@@ -14,37 +14,39 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-@Table(name="hotel")
-public class Hotel implements Serializable{
-	
+@Table(name = "hotel")
+public class Hotel implements Serializable {
+
 	private static final long serialVersionUID = 2132956606968141760L;
 
 	@Id
 	@Column(name = "hotel_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long hotelId;
-	
+
 	@Column(name = "hotel_code", unique = true, nullable = false)
 	private String hotelCode;
-	
+
 	@Column(name = "hotel_name", nullable = false)
 	private String hotelName;
-	
+
 	@Column(name = "status", nullable = false)
 	private Status status;
-	
+
 	@Column(name = "created_at", nullable = false)
 	private String createdAt;
-	
+
 	@Column(name = "created_by", nullable = false)
 	private String createdBy;
-	
+
 	@Column(name = "modified_at")
 	private String modifiedAt;
-	
+
 	@Column(name = "modified_by")
 	private String modifiedBy;
 	
+	public Hotel() {
+	}
 
 	public Hotel(String hotelCode, String hotelName, Status status, String createdAt, String createdBy,
 			String modifiedAt, String modifiedBy) {
@@ -56,7 +58,7 @@ public class Hotel implements Serializable{
 		this.modifiedAt = modifiedAt;
 		this.modifiedBy = modifiedBy;
 	}
-	
+
 	public Hotel(String hotelCode, String hotelName, Status status, String createdAt, String createdBy) {
 		this.hotelCode = hotelCode;
 		this.hotelName = hotelName;
@@ -131,39 +133,25 @@ public class Hotel implements Serializable{
 	
 	@Override
 	public String toString() {
-		return "Hotel{" +
-                "Hotel Id ='" + hotelId + '\'' +
-                ", Hotel Code ='" + hotelCode + '\'' +
-                ", Hotel Name ='" + hotelName + '\'' +
-                ", Status ='" + status + '\'' +
-                ", Created at ='" + createdAt + '\'' +
-                ", Created by ='" + createdBy + '\'' +
-                ", Modified at ='" + modifiedAt + '\'' +
-                ", Modified by ='" + modifiedBy + '\'' +
-                '}';
+		return "Hotel{" + "Hotel Id ='" + hotelId + '\'' + ", Hotel Code ='" + hotelCode + '\'' + ", Hotel Name ='"
+				+ hotelName + '\'' + ", Status ='" + status + '\'' + ", Created at ='" + createdAt + '\''
+				+ ", Created by ='" + createdBy + '\'' + ", Modified at ='" + modifiedAt + '\'' + ", Modified by ='"
+				+ modifiedBy + '\'' + '}';
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		if(this == o) return true;
-		if(o == null || getClass() != o.getClass()) return false;
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 		Hotel hotel = (Hotel) o;
-		return Objects.equals(hotelId, hotel.hotelId) && 
-				Objects.equals(hotelCode, hotel.hotelCode) &&
-				Objects.equals(hotelName, hotel.hotelName) &&
-				status == hotel.status  &&
-				Objects.equals(createdAt, hotel.createdAt) &&
-				Objects.equals(createdBy, hotel.createdBy) &&
-				Objects.equals(modifiedAt, hotel.modifiedAt) &&
-				Objects.equals(modifiedBy, hotel.modifiedBy);
+		return Objects.equals(hotelId, hotel.hotelId) && Objects.equals(hotelCode, hotel.hotelCode)
+				&& Objects.equals(hotelName, hotel.hotelName) && status == hotel.status
+				&& Objects.equals(createdAt, hotel.createdAt) && Objects.equals(createdBy, hotel.createdBy)
+				&& Objects.equals(modifiedAt, hotel.modifiedAt) && Objects.equals(modifiedBy, hotel.modifiedBy);
 	}
-	
-	@Override
-    public int hashCode() {
-        return Objects.hash(hotelId, hotelCode, hotelName, status, createdAt, createdBy, modifiedAt, modifiedBy);
-    }
-	
-	
-	
 
 }

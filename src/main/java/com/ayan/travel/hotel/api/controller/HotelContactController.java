@@ -18,68 +18,66 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ayan.travel.hotel.api.dto.HotelAddressRequestDTO;
+import com.ayan.travel.hotel.api.dto.HotelContactRequestDTO;
 
-import com.ayan.travel.hotel.api.service.HotelAddressService;
-
-import com.ayan.travel.hotel.entity.HotelAddress;
+import com.ayan.travel.hotel.api.service.HotelContactService;
+import com.ayan.travel.hotel.entity.HotelContact;
 import com.ayan.travel.hotel.exception.ElementExistsException;
 import com.ayan.travel.hotel.exception.ElementUpdatedException;
 import com.ayan.travel.hotel.exception.InputMappingException;
 
-
 @RestController
-@RequestMapping(path = "hotel/{hotel_id}/address")
-public class HotelAddressController {
+@RequestMapping(path = "hotel/{hotel_id}/contact")
+public class HotelContactController {
 
-	private HotelAddressService hotelAddressService;
+	private HotelContactService hotelContactService;
 
 	@Autowired
-	public HotelAddressController(HotelAddressService hotelAddressService) {
-		this.hotelAddressService = hotelAddressService;
+	public HotelContactController(HotelContactService hotelContactService) {
+		this.hotelContactService = hotelContactService;
 	}
 
-	protected HotelAddressController() {
+	protected HotelContactController() {
 
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public HotelAddress createHotelAddress(@RequestBody @Validated HotelAddressRequestDTO input,
+	public HotelContact createHotelContact(@RequestBody @Validated HotelContactRequestDTO input,
 			@PathVariable("hotel_id") String hotelId) {
-		return hotelAddressService.createHotelAddress(input, Long.parseLong(hotelId));
+		return hotelContactService.createHotelContact(input, Long.parseLong(hotelId));
 	}
 	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<HotelAddress> getHotelAddress(@PathVariable("hotel_id") String hotelId) {
-		return hotelAddressService.getAllAddresses(Long.parseLong(hotelId));
+	public List<HotelContact> getHotelContact(@PathVariable("hotel_id") String hotelId) {
+		return hotelContactService.getAllContacts(Long.parseLong(hotelId));
 	}
 	
 	@GetMapping(params = "address_type")
 	@ResponseStatus(HttpStatus.OK)
-	public HotelAddress getHotelAddress(@PathVariable("hotel_id") String hotelId, @RequestParam String address_type) {
-		return hotelAddressService.getAddressByType(Long.parseLong(hotelId), address_type);
+	public HotelContact getHotelContact(@PathVariable("hotel_id") String hotelId, @RequestParam String address_type) {
+		return hotelContactService.getContactByType(Long.parseLong(hotelId), address_type);
 	}
 	
 	
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
-	public HotelAddress updateHotelAddress(@RequestBody @Validated HotelAddressRequestDTO input,
+	public HotelContact updateHotelContact(@RequestBody @Validated HotelContactRequestDTO input,
 			@PathVariable("hotel_id") String hotelId) {
-		return hotelAddressService.updateHotelAddress(input, Long.parseLong(hotelId));
+		return hotelContactService.updateHotelContact(input, Long.parseLong(hotelId));
 	}
 
 	@DeleteMapping()
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteAllHotelAddress(@PathVariable("hotel_id") String hotelId) {
-		hotelAddressService.deleteAllHotelAddresses(Long.parseLong(hotelId));
+	public void deleteAllHotelContact(@PathVariable("hotel_id") String hotelId) {
+		hotelContactService.deleteAllHotelContacts(Long.parseLong(hotelId));
 	}
 
 	@DeleteMapping(params = { "address_type" })
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteHotelAddress(@PathVariable("hotel_id") String hotelId, @RequestParam String address_type) {
-		hotelAddressService.deleteHotelAddress(Long.parseLong(hotelId), address_type);
+	public void deleteHotelContact(@PathVariable("hotel_id") String hotelId, @RequestParam String address_type) {
+		hotelContactService.deleteHotelContact(Long.parseLong(hotelId), address_type);
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)

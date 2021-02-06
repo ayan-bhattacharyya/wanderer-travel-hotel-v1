@@ -16,7 +16,7 @@ public class HotelAddressRequestDTO {
 	@JsonProperty("AddressLine3")
 	private String addressLine3;
 
-	@JsonProperty("city")
+	@JsonProperty("City")
 	private String city;
 
 	@JsonProperty("State")

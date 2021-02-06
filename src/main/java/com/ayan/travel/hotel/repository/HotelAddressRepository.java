@@ -14,7 +14,7 @@ import com.ayan.travel.hotel.entity.HotelAddress;
 @RepositoryRestResource(exported = false)
 public interface HotelAddressRepository extends CrudRepository<HotelAddress, Long> {
 
-	List<HotelAddress> findByAddressLine4AndCountry(String addressLine4, String country);
+	List<HotelAddress> findByCityAndCountry(String city, String country);
 	
 	List<HotelAddress> findByPostcode(String postcode);
 	

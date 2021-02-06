@@ -3,13 +3,10 @@ package com.ayan.travel.hotel.api.service;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import javax.management.RuntimeErrorException;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ayan.travel.hotel.api.dto.HotelAddressRequestDTO;
 import com.ayan.travel.hotel.api.dto.HotelRequestDTO;
 import com.ayan.travel.hotel.domain.Status;
 import com.ayan.travel.hotel.entity.Hotel;
@@ -23,7 +20,7 @@ import com.ayan.travel.hotel.service.DateTimeService;
 
 @Service
 public class HotelService {
-
+	
 	private static final String DATE_FORMATTER = "dd-MM-yyyy'T'HH:mm:ss'Z'";
 	private static final String HOTEL_CODE_MISSING = "A mandatory field 'Hotel code' is missing";
 	private static final String HOTEL_NAME_MISSING = "A mandatory field 'Hotel name' is missing";
@@ -47,6 +44,8 @@ public class HotelService {
 	public Hotel createHotel(HotelRequestDTO input) {
 		DateTimeService dateTimeService = new DateTimeService();
 		String createdAt = dateTimeService.getDateTime(DATE_FORMATTER);
+		
+		validateMandatoryFields(input);
 
 		 if (hotelRepository.findByHotelCode(input.getHotelCode()).size() > 0) {
 			throw new ElementExistsException(HOTEL_ALREADY_EXISTS);
@@ -63,6 +62,8 @@ public class HotelService {
 	public Hotel updateHotel(HotelRequestDTO input) {
 		DateTimeService dateTimeService = new DateTimeService();
 		String updatedAt = dateTimeService.getDateTime(DATE_FORMATTER);
+		
+		validateMandatoryFields(input);
 		
 		if (getHotelByCode(input.getHotelCode()) == null) {
 			throw new NoSuchElementException(HOTEL_NOT_EXISTS);
@@ -124,7 +125,7 @@ public class HotelService {
 				.orElseThrow(() -> new NoSuchElementException("No Hotel exists for this Id: " + id));
 	}
 	
-	private void validateMandatoryFields(HotelRequestDTO input) {
+	private Boolean validateMandatoryFields(HotelRequestDTO input) {
 		if (StringUtils.isBlank(input.getHotelCode())) {
 			throw new InputMappingException(HOTEL_CODE_MISSING);
 
@@ -134,6 +135,8 @@ public class HotelService {
 		} else if (StringUtils.isBlank(input.getResponsibleUser())) {
 			throw new InputMappingException(USER_MISSING);
 
+		} else {
+			return Boolean.TRUE;
 		}
 	}
 }

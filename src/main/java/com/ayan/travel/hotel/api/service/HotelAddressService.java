@@ -93,14 +93,14 @@ public class HotelAddressService {
 		}
 	}
 	
-	public void deleteHotel(Long hotelId) {
+	public void deleteAllHotelAddresses(Long hotelId) {
 		Hotel hotel = hotelService.getHotelById(hotelId);
 		List<HotelAddress> hotelAddresses = hotelAddressRepository.findByHotel(hotel);
 		hotelAddressRepository.deleteAll(hotelAddresses);
 		
 	}
 	
-	public void deleteHotel(Long hotelId, String addressType) {
+	public void deleteHotelAddress(Long hotelId, String addressType) {
 		HotelAddress hotelAddress = getAddressByType(hotelId, addressType);
 		hotelAddressRepository.delete(hotelAddress);
 	}
@@ -118,12 +118,12 @@ public class HotelAddressService {
 		}
 	}
 	
-	public List<HotelAddress> getAllAddress(Long hotelId) {
+	public List<HotelAddress> getAllAddresses(Long hotelId) {
 		return hotelAddressRepository.findByHotel(hotelService.getHotelById(hotelId));
 		
 	}
 	
-	private void validateMandatoryFields(HotelAddressRequestDTO input, Long hotelId) {
+	private Boolean validateMandatoryFields(HotelAddressRequestDTO input, Long hotelId) {
 		if (hotelId == null) {
 			throw new InputMappingException(HOTEL_ID_MISSING);
 
@@ -145,9 +145,11 @@ public class HotelAddressService {
 		} else if (StringUtils.isBlank(input.getCountry())) {
 			throw new InputMappingException(HOTEL_ADDRESS_COUNTRY_MISSING);
 
-		} else if (StringUtils.isBlank(input.getResponsibleUser())) {
+		} else if(StringUtils.isBlank(input.getResponsibleUser())) {
 			throw new InputMappingException(USER_MISSING);
 
+		} else {
+			return Boolean.TRUE;
 		}
 	}
 	

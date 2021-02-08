@@ -3,6 +3,8 @@ package com.ayan.travel.hotel.api.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -29,8 +31,10 @@ import com.ayan.travel.hotel.exception.InputMappingException;
 
 
 @RestController
-@RequestMapping(path = "hotel/{hotel_id}/address")
+@RequestMapping(path = "hotel/{hotel_code}/address")
 public class HotelAddressController {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(HotelAddressController.class);
 
 	private HotelAddressService hotelAddressService;
 
@@ -46,40 +50,72 @@ public class HotelAddressController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public HotelAddress createHotelAddress(@RequestBody @Validated HotelAddressRequestDTO input,
-			@PathVariable("hotel_id") String hotelId) {
-		return hotelAddressService.createHotelAddress(input, Long.parseLong(hotelId));
+			@PathVariable("hotel_code") String hotelCode) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Input for hotel address Create {}", input);
+			LOGGER.info("Hotel code {}", hotelCode);
+		}
+		return hotelAddressService.createHotelAddress(input, hotelCode);
 	}
 	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<HotelAddress> getHotelAddress(@PathVariable("hotel_id") String hotelId) {
-		return hotelAddressService.getAllAddresses(Long.parseLong(hotelId));
+	public List<HotelAddress> getHotelAddress(@PathVariable("hotel_code") String hotelCode) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel code {}", hotelCode);
+		}
+		
+		return hotelAddressService.getAllAddresses(hotelCode);
 	}
 	
 	@GetMapping(params = "address_type")
 	@ResponseStatus(HttpStatus.OK)
-	public HotelAddress getHotelAddress(@PathVariable("hotel_id") String hotelId, @RequestParam String address_type) {
-		return hotelAddressService.getAddressByType(Long.parseLong(hotelId), address_type);
+	public HotelAddress getHotelAddress(@PathVariable("hotel_code") String hotelCode, @RequestParam String address_type) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Address Type {}", address_type);
+			LOGGER.info("Hotel code {}", hotelCode);
+		}
+		return hotelAddressService.getAddressByType(hotelCode, address_type);
 	}
 	
 	
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
 	public HotelAddress updateHotelAddress(@RequestBody @Validated HotelAddressRequestDTO input,
-			@PathVariable("hotel_id") String hotelId) {
-		return hotelAddressService.updateHotelAddress(input, Long.parseLong(hotelId));
+			@PathVariable("hotel_code") String hotelCode) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Input for hotel address Create {}", input);
+			LOGGER.info("Hotel code {}", hotelCode);
+		}
+		
+		return hotelAddressService.updateHotelAddress(input, hotelCode);
 	}
 
 	@DeleteMapping()
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteAllHotelAddress(@PathVariable("hotel_id") String hotelId) {
-		hotelAddressService.deleteAllHotelAddresses(Long.parseLong(hotelId));
+	public void deleteAllHotelAddress(@PathVariable("hotel_code") String hotelCode) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel code {}", hotelCode);
+		}
+		
+		hotelAddressService.deleteAllHotelAddresses(hotelCode);
 	}
 
 	@DeleteMapping(params = { "address_type" })
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteHotelAddress(@PathVariable("hotel_id") String hotelId, @RequestParam String address_type) {
-		hotelAddressService.deleteHotelAddress(Long.parseLong(hotelId), address_type);
+	public void deleteHotelAddress(@PathVariable("hotel_code") String hotelCode, @RequestParam String address_type) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Address Type {}", address_type);
+			LOGGER.info("Hotel code {}", hotelCode);
+		}
+		
+		hotelAddressService.deleteHotelAddress(hotelCode, address_type);
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)

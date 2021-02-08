@@ -58,5 +58,12 @@ public class HotelRequestDTO {
 	public void setResponsibleUser(String responsibleUser) {
 		this.responsibleUser = responsibleUser;
 	}
+	
+	@Override
+	public String toString() {
+		return "{" + "Hotel Code ='" + hotelCode + '\'' + ", Hotel Name ='"
+				+ hotelName + '\'' + ", Status ='" + status + '\'' + ", Modified at ='" + modifiedAt + '\'' + ", Actioned by ='"
+				+ responsibleUser + '\'' + '}';
+	}
 
 }

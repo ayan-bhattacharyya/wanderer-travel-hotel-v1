@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +23,15 @@ import com.ayan.travel.hotel.service.DateTimeService;
 public class HotelContactService {
 
 	private static final String DATE_FORMATTER = "dd-MM-yyyy'T'HH:mm:ss'Z'";
-	private static final String HOTEL_ID_MISSING = "A mandatory field 'Hotel Id' is missing";
 	private static final String HOTEL_CONTACT_TYPE_MISSING = "A mandatory field 'Contact type' is missing";
 	private static final String HOTEL_CONTACT_VALUE_MISSING = "A mandatory field 'Hotel contact value' is missing";
 	private static final String USER_MISSING = "A mandatory field 'User' is missing";
 	private static final String RESORCE_ALREADY_UPDATED = "The requested resource has already been updated by another user since it is been read";
 	private static final String HOTEL_CONTACT_ALREADY_EXISTS = "A hotel contact with requested hotel code and contact type exists in the system";
 	private static final String HOTEL_CONTACT_NOT_EXISTS = "A hotel contact with requested hotel code and contact type doesn't exist in the system";
+	private static final String HOTEL_NOT_EXISTS = "A hotel with requested hotel code doesn't exist in the system";
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(HotelContactService.class);
 
 	private HotelContactRepository hotelContactRepository;
 	private HotelService hotelService;
@@ -39,14 +43,18 @@ public class HotelContactService {
 		this.hotelService = hotelService;
 	}
 
-	public HotelContact createHotelContact(HotelContactRequestDTO input, Long hotelId) {
+	public HotelContact createHotelContact(HotelContactRequestDTO input, String hotelCode) {
 		DateTimeService dateTimeService = new DateTimeService();
 		String createdAt = dateTimeService.getDateTime(DATE_FORMATTER);
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel address create operation started at {}", createdAt);
+		}
 
-		validateMandatoryFields(input, hotelId);
-		Hotel hotel = hotelService.getHotelById(hotelId);
+		validateMandatoryFields(input, hotelCode);
+		Hotel hotel = hotelService.getHotelByCode(hotelCode);
 
-		if (getContactByType(hotelId, input.getContactType()) != null) {
+		if (getContactByType(hotelCode, input.getContactType()) != null) {
 			throw new ElementExistsException(HOTEL_CONTACT_ALREADY_EXISTS);
 
 		} else {
@@ -55,18 +63,30 @@ public class HotelContactService {
 		}
 	}
 
-	public HotelContact updateHotelContact(HotelContactRequestDTO input, Long hotelId) {
+	public HotelContact updateHotelContact(HotelContactRequestDTO input, String hotelCode) {
 		DateTimeService dateTimeService = new DateTimeService();
 		String updatedAt = dateTimeService.getDateTime(DATE_FORMATTER);
-
-		validateMandatoryFields(input, hotelId);
-		HotelContact hotelContact = getContactByType(hotelId, input.getContactType());
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel address update operation started at {}", updatedAt);
+		}
+		
+		validateMandatoryFields(input, hotelCode);
+		HotelContact hotelContact = getContactByType(hotelCode, input.getContactType());
 
 		if (hotelContact == null) {
 			throw new NoSuchElementException(HOTEL_CONTACT_NOT_EXISTS);
 
 		} else {
-			if (StringUtils.isBlank(hotelContact.getModifiedAt()) || StringUtils.isNotBlank(input.getModifiedAt())) {
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Latest Update Date time {}", hotelContact.getModifiedAt());
+			}
+			
+			if (StringUtils.isNotBlank(hotelContact.getModifiedAt()) || 
+					StringUtils.isBlank(input.getModifiedAt())) {
+				throw new ElementUpdatedException(RESORCE_ALREADY_UPDATED);
+			} else if (StringUtils.isBlank(hotelContact.getModifiedAt())
+					|| input.getModifiedAt().equals(hotelContact.getModifiedAt())) {
 				hotelContact.setContactValue(input.getContactValue());
 				hotelContact.setModifiedAt(updatedAt);
 				hotelContact.setModifiedBy(input.getResponsibleUser());
@@ -79,38 +99,57 @@ public class HotelContactService {
 		}
 	}
 
-	public void deleteAllHotelContacts(Long hotelId) {
-		Hotel hotel = hotelService.getHotelById(hotelId);
+	public void deleteAllHotelContacts(String hotelCode) {
+		DateTimeService dateTimeService = new DateTimeService();
+		String deletedAt = dateTimeService.getDateTime(DATE_FORMATTER);
+
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel delete operation started at {}", deletedAt);
+		}
+		
+		Hotel hotel = hotelService.getHotelByCode(hotelCode);
 		List<HotelContact> hotelContacts = hotelContactRepository.findByHotel(hotel);
 		hotelContactRepository.deleteAll(hotelContacts);
 
 	}
 
-	public void deleteHotelContact(Long hotelId, String conatctType) {
-		HotelContact hotelContact = getContactByType(hotelId, conatctType);
+	public void deleteHotelContact(String hotelCode, String conatctType) {
+		DateTimeService dateTimeService = new DateTimeService();
+		String deletedAt = dateTimeService.getDateTime(DATE_FORMATTER);
+
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel delete operation started at {}", deletedAt);
+		}
+		
+		HotelContact hotelContact = getContactByType(hotelCode, conatctType);
 		hotelContactRepository.delete(hotelContact);
 	}
 
-	public HotelContact getContactByType(Long hotelId, String contactTypeStr) {
-		Hotel hotel = hotelService.getHotelById(hotelId);
+	public HotelContact getContactByType(String hotelCode, String contactTypeStr) {
+		Hotel hotel = hotelService.getHotelByCode(hotelCode);
 		ContactType contactType = ContactType.findByLabel(contactTypeStr);
+		
 		if (hotelContactRepository.findByHotelAndContactType(hotel, contactType).size() == 0) {
 			return null;
 		} else if (hotelContactRepository.findByHotelAndContactType(hotel, contactType).size() > 1) {
 			throw new RuntimeException("More than one hotel Address exists for the contact type " + contactType);
 		} else {
-			return hotelContactRepository.findByHotelAndContactType(hotel, contactType).get(0);
+			HotelContact hotelContact = hotelContactRepository.findByHotelAndContactType(hotel, contactType).get(0);
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Hotel contact details {}", hotelContact);
+			}
+			return hotelContact;
 		}
 	}
 	
-	public List<HotelContact> getAllContacts(Long hotelId) {
-		return hotelContactRepository.findByHotel(hotelService.getHotelById(hotelId));
+	public List<HotelContact> getAllContacts(String hotelCode) {
+		return hotelContactRepository.findByHotel(hotelService.getHotelByCode(hotelCode));
 		
 	}
 
-	private Boolean validateMandatoryFields(HotelContactRequestDTO input, Long hotelId) {
-		if (hotelId == null) {
-			throw new InputMappingException(HOTEL_ID_MISSING);
+	private Boolean validateMandatoryFields(HotelContactRequestDTO input, String hotelCode) {
+		if (hotelService.getHotelByCode(hotelCode) == null) {
+			throw new InputMappingException(HOTEL_NOT_EXISTS);
 
 		} else if (StringUtils.isBlank(input.getContactType())) {
 			throw new InputMappingException(HOTEL_CONTACT_TYPE_MISSING);

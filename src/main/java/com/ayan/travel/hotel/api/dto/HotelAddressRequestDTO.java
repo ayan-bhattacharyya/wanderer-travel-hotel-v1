@@ -113,6 +113,14 @@ public class HotelAddressRequestDTO {
 	public void setResponsibleUser(String responsibleUser) {
 		this.responsibleUser = responsibleUser;
 	}
-
+	
+	@Override
+	public String toString() {
+		return "Input Request{" + ", Hotel Address Type ='"
+				+ addressType + '\'' + ", Hotel Address Line 1 ='" + addressLine1 + '\'' + ", Hotel Address Line 2 ='"
+				+ addressLine2 + '\'' + ", Hotel Address Line 3 ='" + addressLine3 + '\'' + ", city ='"
+				+ city + '\'' + ", State ='" + state + '\'' + ", Postcode ='" + postcode + '\'' + ", Country ='"
+				+ country + '\'' + ", Modified at ='" + modifiedAt + '\'' + ", Actioned by ='" + responsibleUser + '\'' + '}';
+	}
 
 }

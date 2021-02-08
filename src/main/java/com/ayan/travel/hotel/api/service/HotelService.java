@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,7 @@ import com.ayan.travel.hotel.service.DateTimeService;
 
 @Service
 public class HotelService {
-	
+
 	private static final String DATE_FORMATTER = "dd-MM-yyyy'T'HH:mm:ss'Z'";
 	private static final String HOTEL_CODE_MISSING = "A mandatory field 'Hotel code' is missing";
 	private static final String HOTEL_NAME_MISSING = "A mandatory field 'Hotel name' is missing";
@@ -28,6 +30,8 @@ public class HotelService {
 	private static final String RESORCE_ALREADY_UPDATED = "The requested resource has already been updated by another user since it is been read";
 	private static final String HOTEL_ALREADY_EXISTS = "A hotel with requested hotel code exists in the system";
 	private static final String HOTEL_NOT_EXISTS = "A Hotel with requested hotel code either not exists or incative";
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(HotelService.class);
 
 	private HotelRepository hotelRepository;
 	private HotelAddressRepository hotelAddressRepository;
@@ -44,10 +48,14 @@ public class HotelService {
 	public Hotel createHotel(HotelRequestDTO input) {
 		DateTimeService dateTimeService = new DateTimeService();
 		String createdAt = dateTimeService.getDateTime(DATE_FORMATTER);
-		
+
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel create operation started at {}", createdAt);
+		}
+
 		validateMandatoryFields(input);
 
-		 if (hotelRepository.findByHotelCode(input.getHotelCode()).size() > 0) {
+		if (hotelRepository.findByHotelCode(input.getHotelCode()).size() > 0) {
 			throw new ElementExistsException(HOTEL_ALREADY_EXISTS);
 
 		} else if (StringUtils.isBlank(input.getStatus())) {
@@ -60,24 +68,35 @@ public class HotelService {
 	}
 
 	public Hotel updateHotel(HotelRequestDTO input) {
+
 		DateTimeService dateTimeService = new DateTimeService();
 		String updatedAt = dateTimeService.getDateTime(DATE_FORMATTER);
-		
+
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel update operation started at {}", updatedAt);
+		}
+
 		validateMandatoryFields(input);
-		
+
 		if (getHotelByCode(input.getHotelCode()) == null) {
 			throw new NoSuchElementException(HOTEL_NOT_EXISTS);
 
-		} else if (StringUtils.isBlank(input.getModifiedAt())) {
-			throw new ElementUpdatedException(RESORCE_ALREADY_UPDATED);
-
 		} else {
 			Hotel hotel = getHotelByCode(input.getHotelCode());
-			if(StringUtils.isBlank(hotel.getModifiedAt())) {
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Latest Update Date time {}", hotel.getModifiedAt());
+			}
+
+			if (StringUtils.isBlank(input.getModifiedAt()) && StringUtils.isNotBlank(hotel.getModifiedAt())) {
+				throw new ElementUpdatedException(RESORCE_ALREADY_UPDATED);
+
+			} else if (StringUtils.isBlank(hotel.getModifiedAt())
+					|| input.getModifiedAt().equals(hotel.getModifiedAt())) {
 				hotel.setHotelName(input.getHotelName());
 				hotel.setModifiedAt(updatedAt);
 				hotel.setModifiedBy(input.getResponsibleUser());
 				return hotelRepository.save(hotel);
+
 			} else {
 				throw new ElementUpdatedException(RESORCE_ALREADY_UPDATED);
 			}
@@ -85,6 +104,13 @@ public class HotelService {
 	}
 
 	public void deleteHotel(String hotelCode) {
+		DateTimeService dateTimeService = new DateTimeService();
+		String deletedAt = dateTimeService.getDateTime(DATE_FORMATTER);
+
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel delete operation started at {}", deletedAt);
+		}
+		
 		if (hotelRepository.findByHotelCode(hotelCode).size() == 0) {
 			throw new NoSuchElementException(HOTEL_NOT_EXISTS);
 
@@ -107,24 +133,37 @@ public class HotelService {
 	}
 
 	public Hotel getHotelByCode(String hotelCode) {
+		
 		if (hotelRepository.findByHotelCodeAndStatus(hotelCode, Status.A).size() == 0) {
 			return null;
 		} else if (hotelRepository.findByHotelCodeAndStatus(hotelCode, Status.A).size() > 1) {
 			throw new RuntimeException("More than one active hotel exists for the hotel code " + hotelCode);
 		} else {
-			return hotelRepository.findByHotelCodeAndStatus(hotelCode, Status.A).get(0);
+			Hotel hotel = hotelRepository.findByHotelCodeAndStatus(hotelCode, Status.A).get(0);
+			
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Hotel details {}", hotel);
+			}
+			
+			return hotel;
 		}
 	}
 
 	public List<Hotel> getHotelByName(String hotelName) {
+		
 		return hotelRepository.findByHotelNameAndStatus(hotelName, Status.A);
 	}
 
 	public Hotel getHotelById(Long id) {
-		return hotelRepository.findById(id)
+		Hotel hotel = hotelRepository.findById(id)
 				.orElseThrow(() -> new NoSuchElementException("No Hotel exists for this Id: " + id));
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel details {}", hotel);
+		}
+		
+		return hotel;
 	}
-	
+
 	private Boolean validateMandatoryFields(HotelRequestDTO input) {
 		if (StringUtils.isBlank(input.getHotelCode())) {
 			throw new InputMappingException(HOTEL_CODE_MISSING);

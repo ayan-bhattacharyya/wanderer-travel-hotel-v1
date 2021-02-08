@@ -5,6 +5,11 @@ import org.slf4j.LoggerFactory;
 
 public class ElementUpdatedException extends RuntimeException {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7112743398709953896L;
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ElementUpdatedException.class);
 
 	/**

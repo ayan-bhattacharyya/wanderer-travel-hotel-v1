@@ -3,6 +3,8 @@ package com.ayan.travel.hotel.api.controller;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +31,8 @@ import com.ayan.travel.hotel.exception.InputMappingException;
 @RestController
 @RequestMapping(path = "/hotel")
 public class HotelController {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(HotelController.class);
 
 	private HotelService hotelService;
 
@@ -44,24 +48,44 @@ public class HotelController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Hotel createHotel(@RequestBody @Validated HotelRequestDTO input) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Input for hotel address Create {}", input);
+		}
+		
 		return hotelService.createHotel(input);
 	}
 	
 	@GetMapping(params = "hotel_code")
 	@ResponseStatus(HttpStatus.OK)
 	public Hotel getHotelByHotelCode(@RequestParam String hotel_code) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel code {}", hotel_code);
+		}
+		
 		return hotelService.getHotelByCode(hotel_code);
 	}
 	
 	@GetMapping(params = "hotel_name")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Hotel> getHotelByName(@RequestParam String hotel_name) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel name {}", hotel_name);
+		}
+		
 		return hotelService.getHotelByName(hotel_name);
 	}
 	
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
 	public Hotel updateHotel(@RequestBody @Validated HotelRequestDTO input) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Input for hotel address Create {}", input);
+		}
+		
 		return hotelService.updateHotel(input);
 
 	}
@@ -69,6 +93,11 @@ public class HotelController {
 	@DeleteMapping("/{hotel_code}")
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteHotel(@PathVariable("hotel_code") String hotelCode) {
+		
+		if (LOGGER.isInfoEnabled()) {
+			LOGGER.info("Hotel code {}", hotelCode);
+		}
+		
 		hotelService.deleteHotel(hotelCode);
 	}
 

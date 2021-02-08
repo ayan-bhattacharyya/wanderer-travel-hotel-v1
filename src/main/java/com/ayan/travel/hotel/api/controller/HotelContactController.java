@@ -27,7 +27,7 @@ import com.ayan.travel.hotel.exception.ElementUpdatedException;
 import com.ayan.travel.hotel.exception.InputMappingException;
 
 @RestController
-@RequestMapping(path = "hotel/{hotel_id}/contact")
+@RequestMapping(path = "hotel/{hotel_code}/contact")
 public class HotelContactController {
 
 	private HotelContactService hotelContactService;
@@ -44,40 +44,40 @@ public class HotelContactController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public HotelContact createHotelContact(@RequestBody @Validated HotelContactRequestDTO input,
-			@PathVariable("hotel_id") String hotelId) {
-		return hotelContactService.createHotelContact(input, Long.parseLong(hotelId));
+			@PathVariable("hotel_code") String hotelCode) {
+		return hotelContactService.createHotelContact(input, hotelCode);
 	}
 	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public List<HotelContact> getHotelContact(@PathVariable("hotel_id") String hotelId) {
-		return hotelContactService.getAllContacts(Long.parseLong(hotelId));
+	public List<HotelContact> getHotelContact(@PathVariable("hotel_code") String hotelCode) {
+		return hotelContactService.getAllContacts(hotelCode);
 	}
 	
 	@GetMapping(params = "address_type")
 	@ResponseStatus(HttpStatus.OK)
-	public HotelContact getHotelContact(@PathVariable("hotel_id") String hotelId, @RequestParam String address_type) {
-		return hotelContactService.getContactByType(Long.parseLong(hotelId), address_type);
+	public HotelContact getHotelContact(@PathVariable("hotel_code") String hotelCode, @RequestParam String address_type) {
+		return hotelContactService.getContactByType(hotelCode, address_type);
 	}
 	
 	
 	@PutMapping
 	@ResponseStatus(HttpStatus.OK)
 	public HotelContact updateHotelContact(@RequestBody @Validated HotelContactRequestDTO input,
-			@PathVariable("hotel_id") String hotelId) {
-		return hotelContactService.updateHotelContact(input, Long.parseLong(hotelId));
+			@PathVariable("hotel_code") String hotelCode) {
+		return hotelContactService.updateHotelContact(input, hotelCode);
 	}
 
 	@DeleteMapping()
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteAllHotelContact(@PathVariable("hotel_id") String hotelId) {
-		hotelContactService.deleteAllHotelContacts(Long.parseLong(hotelId));
+	public void deleteAllHotelContact(@PathVariable("hotel_code") String hotelCode) {
+		hotelContactService.deleteAllHotelContacts(hotelCode);
 	}
 
 	@DeleteMapping(params = { "address_type" })
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteHotelContact(@PathVariable("hotel_id") String hotelId, @RequestParam String address_type) {
-		hotelContactService.deleteHotelContact(Long.parseLong(hotelId), address_type);
+	public void deleteHotelContact(@PathVariable("hotel_code") String hotelCode, @RequestParam String address_type) {
+		hotelContactService.deleteHotelContact(hotelCode, address_type);
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)

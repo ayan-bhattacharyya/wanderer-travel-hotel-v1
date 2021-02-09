@@ -48,17 +48,6 @@ public class Hotel implements Serializable {
 	public Hotel() {
 	}
 
-	public Hotel(String hotelCode, String hotelName, Status status, String createdAt, String createdBy,
-			String modifiedAt, String modifiedBy) {
-		this.hotelCode = hotelCode;
-		this.hotelName = hotelName;
-		this.status = status;
-		this.createdAt = createdAt;
-		this.createdBy = createdBy;
-		this.modifiedAt = modifiedAt;
-		this.modifiedBy = modifiedBy;
-	}
-
 	public Hotel(String hotelCode, String hotelName, Status status, String createdAt, String createdBy) {
 		this.hotelCode = hotelCode;
 		this.hotelName = hotelName;
@@ -133,7 +122,7 @@ public class Hotel implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Hotel{" + "Hotel Id ='" + hotelId + '\'' + ", Hotel Code ='" + hotelCode + '\'' + ", Hotel Name ='"
+		return "Hotel {" + "Hotel Id ='" + hotelId + '\'' + ", Hotel Code ='" + hotelCode + '\'' + ", Hotel Name ='"
 				+ hotelName + '\'' + ", Status ='" + status + '\'' + ", Created at ='" + createdAt + '\''
 				+ ", Created by ='" + createdBy + '\'' + ", Modified at ='" + modifiedAt + '\'' + ", Modified by ='"
 				+ modifiedBy + '\'' + '}';

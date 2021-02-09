@@ -55,3 +55,53 @@ CREATE TABLE room (
   modified_by VARCHAR(100) NOT NULL
 );
 ALTER TABLE room ADD FOREIGN KEY (hotel_id) REFERENCES hotel(hotel_id);
+ALTER TABLE room ADD CONSTRAINT uq_room UNIQUE(hotel_id, room_number);
+
+CREATE TABLE user (
+  user_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(255) NOT NULL,
+  password VARCHAR(255),
+  email VARCHAR(255) NOT NULL,
+  mobile VARCHAR(13) NOT NULL,
+  created_at VARCHAR(50) NOT NULL,
+  created_by VARCHAR(100) NOT NULL,
+  modified_at VARCHAR(50) not null,
+  modified_by VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE user_address (
+  address_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT,
+  address_type CHAR(1) NOT NULL,
+  address_line_1 VARCHAR(100) NOT NULL,
+  address_line_2 VARCHAR(100) NOT NULL,
+  address_line_3 VARCHAR(100) NOT NULL,
+  address_line_4 VARCHAR(100) NOT NULL,
+  state VARCHAR(100) NOT NULL,
+  postcode VARCHAR(100) NOT NULL,
+  country VARCHAR(100) NOT NULL,
+  created_at VARCHAR(50) NOT NULL,
+  created_by VARCHAR(100) NOT NULL,
+  modified_at VARCHAR(50) not null,
+  modified_by VARCHAR(100) NOT NULL
+);
+ALTER TABLE user_address ADD FOREIGN KEY (user_id) REFERENCES user(user_id);
+
+CREATE TABLE room_reservation (
+  room_reservation_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  room_id BIGINT,
+  user_id BIGINT,
+  status CHAR(1) NOT NULL,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  email VARCHAR(255),
+  mobile VARCHAR(13),
+  ext_reference VARCHAR(255),
+  agent VARCHAR(255),
+  created_at VARCHAR(50) NOT NULL,
+  created_by VARCHAR(100) NOT NULL,
+  modified_at VARCHAR(50) not null,
+  modified_by VARCHAR(100) NOT NULL
+);
+ALTER TABLE room_reservation ADD FOREIGN KEY (room_id) REFERENCES room(room_id);
+ALTER TABLE room_reservation ADD FOREIGN KEY (user_id) REFERENCES user(user_id);

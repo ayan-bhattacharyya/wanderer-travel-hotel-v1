@@ -15,8 +15,8 @@ import javax.persistence.Table;
 import com.ayan.travel.hotel.domain.AddressType;
 
 @Entity
-@Table(name = "hotel_address")
-public class HotelAddress implements Serializable {
+@Table(name = "user_address")
+public class UserAddress implements Serializable {
 
 	private static final long serialVersionUID = 1740869414999752409L;
 
@@ -26,8 +26,8 @@ public class HotelAddress implements Serializable {
 	private Long addressId;
 	
 	@ManyToOne
-    @JoinColumn(name="hotel_id")
-	private Hotel hotel;
+    @JoinColumn(name="user_id")
+	private User user;
 
 	@Column(name = "address_type", nullable = false)
 	private AddressType addressType;
@@ -64,33 +64,15 @@ public class HotelAddress implements Serializable {
 
 	@Column(name = "modified_by")
 	private String modifiedBy;
-
-	public HotelAddress(Hotel hotel, AddressType addressType, String addressLine1, String addressLine2,
-			String addressLine3, String city, String state, String postcode, String country, String createdAt,
-			String createdBy, String modifiedAt, String modifiedBy) {
-		this.hotel = hotel;
-		this.addressType = addressType;
-		this.addressLine1 = addressLine1;
-		this.addressLine2 = addressLine2;
-		this.addressLine3 = addressLine3;
-		this.city = city;
-		this.state = state;
-		this.postcode = postcode;
-		this.country = country;
-		this.createdAt = createdAt;
-		this.createdBy = createdBy;
-		this.modifiedAt = modifiedAt;
-		this.modifiedBy = modifiedBy;
-	}
 	
-	public HotelAddress() {
+	public UserAddress() {
 		
 	}
 
-	public HotelAddress(Hotel hotel, AddressType addressType, String addressLine1, String addressLine2,
+	public UserAddress(User user, AddressType addressType, String addressLine1, String addressLine2,
 			String addressLine3, String city, String state, String postcode, String country, String createdAt,
 			String createdBy) {
-		this.hotel = hotel;
+		this.user = user;
 		this.addressType = addressType;
 		this.addressLine1 = addressLine1;
 		this.addressLine2 = addressLine2;
@@ -111,12 +93,12 @@ public class HotelAddress implements Serializable {
 		this.addressId = addressId;
 	}
 
-	public Hotel getHotel() {
-		return hotel;
+	public User getUser() {
+		return user;
 	}
 
-	public void setHotel(Hotel hotel) {
-		this.hotel = hotel;
+	public void setHotel(User user) {
+		this.user = user;
 	}
 
 	public AddressType getAddressType() {
@@ -217,7 +199,7 @@ public class HotelAddress implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Hotel Address {" + ", Hotel Address Id ='" + addressId + '\'' + ", Hotel Address Type ='"
+		return "User Address {" + ", Hotel Address Id ='" + addressId + '\'' + ", Hotel Address Type ='"
 				+ addressType + '\'' + ", Hotel Address Line 1 ='" + addressLine1 + '\'' + ", Hotel Address Line 2 ='"
 				+ addressLine2 + '\'' + ", Hotel Address Line 3 ='" + addressLine3 + '\'' + ", city ='"
 				+ city + '\'' + ", State ='" + state + '\'' + ", Postcode ='" + postcode + '\'' + ", Country ='"
@@ -231,8 +213,8 @@ public class HotelAddress implements Serializable {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		HotelAddress hotelAddress = (HotelAddress) o;
-		return Objects.equals(addressId, hotelAddress.addressId) && Objects.equals(hotel, hotelAddress.hotel)
+		UserAddress hotelAddress = (UserAddress) o;
+		return Objects.equals(addressId, hotelAddress.addressId) && Objects.equals(user, hotelAddress.user)
 				&& addressType == hotelAddress.addressType && Objects.equals(addressLine1, hotelAddress.addressLine1)
 				&& Objects.equals(addressLine2, hotelAddress.addressLine2)
 				&& Objects.equals(addressLine3, hotelAddress.addressLine3)

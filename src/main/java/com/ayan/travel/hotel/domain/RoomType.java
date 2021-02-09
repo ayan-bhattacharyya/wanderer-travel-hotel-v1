@@ -1,5 +1,7 @@
 package com.ayan.travel.hotel.domain;
 
+import java.util.NoSuchElementException;
+
 public enum RoomType {
 	SBD("Single Bed"), DBD("Double Bed"), DOM("Dormitory"), SUITE("Suite"), ESUITE("Executive Suite");
 
@@ -15,7 +17,7 @@ public enum RoomType {
 				return rt;
 			}
 		}
-		throw new RuntimeException("No Enum value exists for " + label);
+		throw new NoSuchElementException("No Enum value exists for " + label);
 	}
 
 }

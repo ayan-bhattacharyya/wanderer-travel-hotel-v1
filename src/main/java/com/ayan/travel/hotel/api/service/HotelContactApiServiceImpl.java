@@ -20,7 +20,7 @@ import com.ayan.travel.hotel.repository.HotelContactRepository;
 import com.ayan.travel.hotel.service.DateTimeService;
 
 @Service
-public class HotelContactService {
+public class HotelContactApiServiceImpl {
 
 	private static final String DATE_FORMATTER = "dd-MM-yyyy'T'HH:mm:ss'Z'";
 	private static final String HOTEL_CONTACT_TYPE_MISSING = "A mandatory field 'Contact type' is missing";
@@ -31,16 +31,16 @@ public class HotelContactService {
 	private static final String HOTEL_CONTACT_NOT_EXISTS = "A hotel contact with requested hotel code and contact type doesn't exist in the system";
 	private static final String HOTEL_NOT_EXISTS = "A hotel with requested hotel code doesn't exist in the system";
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(HotelContactService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HotelContactApiServiceImpl.class);
 
 	private HotelContactRepository hotelContactRepository;
-	private HotelService hotelService;
+	private HotelApiServiceImpl hotelApiServiceImpl;
 
 	@Autowired
-	public HotelContactService(HotelContactRepository hotelContactRepository, HotelService hotelService) {
+	public HotelContactApiServiceImpl(HotelContactRepository hotelContactRepository, HotelApiServiceImpl hotelApiServiceImpl) {
 		super();
 		this.hotelContactRepository = hotelContactRepository;
-		this.hotelService = hotelService;
+		this.hotelApiServiceImpl = hotelApiServiceImpl;
 	}
 
 	public HotelContact createHotelContact(HotelContactRequestDTO input, String hotelCode) {
@@ -52,7 +52,7 @@ public class HotelContactService {
 		}
 
 		validateMandatoryFields(input, hotelCode);
-		Hotel hotel = hotelService.getHotelByCode(hotelCode);
+		Hotel hotel = hotelApiServiceImpl.getHotelByCode(hotelCode);
 
 		if (getContactByType(hotelCode, input.getContactType()) != null) {
 			throw new ElementExistsException(HOTEL_CONTACT_ALREADY_EXISTS);
@@ -107,7 +107,7 @@ public class HotelContactService {
 			LOGGER.info("Hotel delete operation started at {}", deletedAt);
 		}
 		
-		Hotel hotel = hotelService.getHotelByCode(hotelCode);
+		Hotel hotel = hotelApiServiceImpl.getHotelByCode(hotelCode);
 		List<HotelContact> hotelContacts = hotelContactRepository.findByHotel(hotel);
 		hotelContactRepository.deleteAll(hotelContacts);
 
@@ -126,7 +126,7 @@ public class HotelContactService {
 	}
 
 	public HotelContact getContactByType(String hotelCode, String contactTypeStr) {
-		Hotel hotel = hotelService.getHotelByCode(hotelCode);
+		Hotel hotel = hotelApiServiceImpl.getHotelByCode(hotelCode);
 		ContactType contactType = ContactType.findByLabel(contactTypeStr);
 		
 		if (hotelContactRepository.findByHotelAndContactType(hotel, contactType).size() == 0) {
@@ -143,12 +143,12 @@ public class HotelContactService {
 	}
 	
 	public List<HotelContact> getAllContacts(String hotelCode) {
-		return hotelContactRepository.findByHotel(hotelService.getHotelByCode(hotelCode));
+		return hotelContactRepository.findByHotel(hotelApiServiceImpl.getHotelByCode(hotelCode));
 		
 	}
 
 	private Boolean validateMandatoryFields(HotelContactRequestDTO input, String hotelCode) {
-		if (hotelService.getHotelByCode(hotelCode) == null) {
+		if (hotelApiServiceImpl.getHotelByCode(hotelCode) == null) {
 			throw new InputMappingException(HOTEL_NOT_EXISTS);
 
 		} else if (StringUtils.isBlank(input.getContactType())) {

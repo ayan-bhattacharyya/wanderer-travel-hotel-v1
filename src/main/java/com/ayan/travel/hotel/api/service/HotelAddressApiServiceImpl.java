@@ -20,7 +20,7 @@ import com.ayan.travel.hotel.repository.HotelAddressRepository;
 import com.ayan.travel.hotel.service.DateTimeService;
 
 @Service
-public class HotelAddressService {
+public class HotelAddressApiServiceImpl {
 
 	private static final String DATE_FORMATTER = "dd-MM-yyyy'T'HH:mm:ss'Z'";
 	private static final String HOTEL_ADDRESS_TYPE_MISSING = "A mandatory field 'Hotel address type' is missing";
@@ -35,15 +35,15 @@ public class HotelAddressService {
 	private static final String HOTEL_ADDRESS_NOT_EXISTS = "A hotel address with requested hotel code and address type doesn't exist in the system";
 	private static final String HOTEL_NOT_EXISTS = "A hotel with requested hotel code doesn't exists in the system";
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(HotelAddressService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HotelAddressApiServiceImpl.class);
 	
 	private HotelAddressRepository hotelAddressRepository;
-	private HotelService hotelService;
+	private HotelApiServiceImpl hotelApiServiceImpl;
 
 	@Autowired
-	public HotelAddressService(HotelAddressRepository hotelAddressRepository, HotelService hotelService) {
+	public HotelAddressApiServiceImpl(HotelAddressRepository hotelAddressRepository, HotelApiServiceImpl hotelApiServiceImpl) {
 		this.hotelAddressRepository = hotelAddressRepository;
-		this.hotelService = hotelService;
+		this.hotelApiServiceImpl = hotelApiServiceImpl;
 	}
 
 	public HotelAddress createHotelAddress(HotelAddressRequestDTO input, String hotelCode) {
@@ -56,8 +56,8 @@ public class HotelAddressService {
 		
 		validateMandatoryFields(input, hotelCode);
 		
-		Long hotelId = hotelService.getHotelByCode(hotelCode).getHotelId();
-		Hotel hotel = hotelService.getHotelById(hotelId);
+		Long hotelId = hotelApiServiceImpl.getHotelByCode(hotelCode).getHotelId();
+		Hotel hotel = hotelApiServiceImpl.getHotelById(hotelId);
 		
 		if(getAddressByType(hotelCode, input.getAddressType()) != null) {
 			throw new ElementExistsException(HOTEL_ADDRESS_ALREADY_EXISTS);
@@ -124,11 +124,11 @@ public class HotelAddressService {
 			LOGGER.info("Hotel delete operation started at {}", deletedAt);
 		}
 		
-		if (hotelService.getHotelByCode(hotelCode) == null) {
+		if (hotelApiServiceImpl.getHotelByCode(hotelCode) == null) {
 			throw new NoSuchElementException(HOTEL_NOT_EXISTS);
 		}
 		
-		Hotel hotel = hotelService.getHotelByCode(hotelCode);
+		Hotel hotel = hotelApiServiceImpl.getHotelByCode(hotelCode);
 		List<HotelAddress> hotelAddresses = hotelAddressRepository.findByHotel(hotel);
 		hotelAddressRepository.deleteAll(hotelAddresses);
 		
@@ -143,7 +143,7 @@ public class HotelAddressService {
 			LOGGER.info("Hotel delete operation started at {}", deletedAt);
 		}
 		
-		if (hotelService.getHotelByCode(hotelCode) == null) {
+		if (hotelApiServiceImpl.getHotelByCode(hotelCode) == null) {
 			throw new NoSuchElementException(HOTEL_NOT_EXISTS);
 		}
 		
@@ -153,11 +153,11 @@ public class HotelAddressService {
 
 	public HotelAddress getAddressByType(String hotelCode, String addressTypeStr) {
 		
-		if (hotelService.getHotelByCode(hotelCode) == null) {
+		if (hotelApiServiceImpl.getHotelByCode(hotelCode) == null) {
 			throw new NoSuchElementException(HOTEL_NOT_EXISTS);
 		}
 		
-		Hotel hotel = hotelService.getHotelById(hotelService.getHotelByCode(hotelCode).getHotelId());
+		Hotel hotel = hotelApiServiceImpl.getHotelById(hotelApiServiceImpl.getHotelByCode(hotelCode).getHotelId());
 		AddressType addressType = AddressType.findByLabel(addressTypeStr);
 		
 		if (hotelAddressRepository.findByHotelAndAddressType(hotel, addressType).size() == 0) {
@@ -175,16 +175,16 @@ public class HotelAddressService {
 	
 	public List<HotelAddress> getAllAddresses(String hotelCode) {
 		
-		if (hotelService.getHotelByCode(hotelCode) == null) {
+		if (hotelApiServiceImpl.getHotelByCode(hotelCode) == null) {
 			throw new NoSuchElementException(HOTEL_NOT_EXISTS);
 		}
 		
-		return hotelAddressRepository.findByHotel(hotelService.getHotelByCode(hotelCode));
+		return hotelAddressRepository.findByHotel(hotelApiServiceImpl.getHotelByCode(hotelCode));
 		
 	}
 	
 	private Boolean validateMandatoryFields(HotelAddressRequestDTO input, String hotelCode) {
-		if (hotelService.getHotelByCode(hotelCode) == null) {
+		if (hotelApiServiceImpl.getHotelByCode(hotelCode) == null) {
 			throw new NoSuchElementException(HOTEL_NOT_EXISTS);
 
 		} else if (StringUtils.isBlank(input.getAddressType())) {

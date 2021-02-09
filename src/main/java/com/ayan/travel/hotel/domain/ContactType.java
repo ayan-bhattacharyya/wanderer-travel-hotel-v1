@@ -1,5 +1,7 @@
 package com.ayan.travel.hotel.domain;
 
+import java.util.NoSuchElementException;
+
 public enum ContactType {
 	WEM("Work Email"), PEM("Personal Email"), WPH("Work Phone"), MPH("Mobile Phone"), FAX("Fascimile");
 
@@ -15,7 +17,7 @@ public enum ContactType {
 				return ct;
 			}
 		}
-		throw new RuntimeException("No Enum value exists for " + label);
+		throw new NoSuchElementException("No Enum value exists for " + label);
 	}
 
 	public String getLabel() {

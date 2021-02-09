@@ -46,17 +46,6 @@ public class HotelContact implements Serializable {
 
 	@Column(name = "modified_by")
 	private String modifiedBy;
-
-	public HotelContact(Hotel hotel, ContactType contactType, String contactValue, String createdAt, String createdBy,
-			String modifiedAt, String modifiedBy) {
-		this.hotel = hotel;
-		this.contactType = contactType;
-		this.contactValue = contactValue;
-		this.createdAt = createdAt;
-		this.createdBy = createdBy;
-		this.modifiedAt = modifiedAt;
-		this.modifiedBy = modifiedBy;
-	}
 	
 	public HotelContact() {
 		
@@ -136,8 +125,7 @@ public class HotelContact implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Hotel Contact{" + ", Hotel Code ='" + hotel.getHotelCode() + '\'' + ", Hotel Name ='"
-				+ hotel.getHotelName() + '\'' + ", Hotel Contact Id ='" + contactId + '\'' + ", Hotel Contact Type ='"
+		return "Hotel Contact{" + ", Hotel Contact Id ='" + contactId + '\'' + ", Hotel Contact Type ='"
 				+ contactType + '\'' + ", Hotel Contact Value ='" + contactValue + '\'' + ", Created at ='" + createdAt
 				+ '\'' + ", Created by ='" + createdBy + '\'' + ", Modified at ='" + modifiedAt + '\''
 				+ ", Modified by ='" + modifiedBy + '\'' + '}';

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ayan.travel.hotel.api.dto.HotelRequestDTO;
-import com.ayan.travel.hotel.api.service.HotelService;
+import com.ayan.travel.hotel.api.service.HotelApiServiceImpl;
 import com.ayan.travel.hotel.entity.Hotel;
 import com.ayan.travel.hotel.exception.ElementExistsException;
 import com.ayan.travel.hotel.exception.ElementUpdatedException;
@@ -34,11 +34,11 @@ public class HotelController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(HotelController.class);
 
-	private HotelService hotelService;
+	private HotelApiServiceImpl hotelApiServiceImpl;
 
 	@Autowired
-	public HotelController(HotelService hotelService) {
-		this.hotelService = hotelService;
+	public HotelController(HotelApiServiceImpl hotelApiServiceImpl) {
+		this.hotelApiServiceImpl = hotelApiServiceImpl;
 	}
 
 	protected HotelController() {
@@ -53,7 +53,7 @@ public class HotelController {
 			LOGGER.info("Input for hotel address Create {}", input);
 		}
 		
-		return hotelService.createHotel(input);
+		return hotelApiServiceImpl.createHotel(input);
 	}
 	
 	@GetMapping(params = "hotel_code")
@@ -64,7 +64,7 @@ public class HotelController {
 			LOGGER.info("Hotel code {}", hotel_code);
 		}
 		
-		return hotelService.getHotelByCode(hotel_code);
+		return hotelApiServiceImpl.getHotelByCode(hotel_code);
 	}
 	
 	@GetMapping(params = "hotel_name")
@@ -75,7 +75,7 @@ public class HotelController {
 			LOGGER.info("Hotel name {}", hotel_name);
 		}
 		
-		return hotelService.getHotelByName(hotel_name);
+		return hotelApiServiceImpl.getHotelByName(hotel_name);
 	}
 	
 	@PutMapping
@@ -86,7 +86,7 @@ public class HotelController {
 			LOGGER.info("Input for hotel address Create {}", input);
 		}
 		
-		return hotelService.updateHotel(input);
+		return hotelApiServiceImpl.updateHotel(input);
 
 	}
 	
@@ -98,7 +98,7 @@ public class HotelController {
 			LOGGER.info("Hotel code {}", hotelCode);
 		}
 		
-		hotelService.deleteHotel(hotelCode);
+		hotelApiServiceImpl.deleteHotel(hotelCode);
 	}
 
 	@PatchMapping("/deactivate")

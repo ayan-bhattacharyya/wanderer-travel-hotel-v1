@@ -21,7 +21,7 @@ import com.ayan.travel.hotel.repository.HotelRepository;
 import com.ayan.travel.hotel.service.DateTimeService;
 
 @Service
-public class HotelService {
+public class HotelApiServiceImpl {
 
 	private static final String DATE_FORMATTER = "dd-MM-yyyy'T'HH:mm:ss'Z'";
 	private static final String HOTEL_CODE_MISSING = "A mandatory field 'Hotel code' is missing";
@@ -31,14 +31,14 @@ public class HotelService {
 	private static final String HOTEL_ALREADY_EXISTS = "A hotel with requested hotel code exists in the system";
 	private static final String HOTEL_NOT_EXISTS = "A Hotel with requested hotel code either not exists or incative";
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(HotelService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(HotelApiServiceImpl.class);
 
 	private HotelRepository hotelRepository;
 	private HotelAddressRepository hotelAddressRepository;
 	private HotelContactRepository hotelContactRepository;
 
 	@Autowired
-	public HotelService(HotelRepository hotelRepository, HotelAddressRepository hotelAddressRepository,
+	public HotelApiServiceImpl(HotelRepository hotelRepository, HotelAddressRepository hotelAddressRepository,
 			HotelContactRepository hotelContactRepository) {
 		this.hotelRepository = hotelRepository;
 		this.hotelAddressRepository = hotelAddressRepository;
@@ -78,7 +78,7 @@ public class HotelService {
 
 		validateMandatoryFields(input);
 
-		if (getHotelByCode(input.getHotelCode()) == null) {
+		if (hotelRepository.findByHotelCode(input.getHotelCode()) == null) {
 			throw new NoSuchElementException(HOTEL_NOT_EXISTS);
 
 		} else {

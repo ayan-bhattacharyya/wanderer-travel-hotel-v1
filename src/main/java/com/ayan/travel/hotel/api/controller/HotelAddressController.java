@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ayan.travel.hotel.api.dto.HotelAddressRequestDTO;
 
-import com.ayan.travel.hotel.api.service.HotelAddressService;
+import com.ayan.travel.hotel.api.service.HotelAddressApiServiceImpl;
 
 import com.ayan.travel.hotel.entity.HotelAddress;
 import com.ayan.travel.hotel.exception.ElementExistsException;
@@ -36,11 +36,11 @@ public class HotelAddressController {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(HotelAddressController.class);
 
-	private HotelAddressService hotelAddressService;
+	private HotelAddressApiServiceImpl hotelAddressApiServiceImpl;
 
 	@Autowired
-	public HotelAddressController(HotelAddressService hotelAddressService) {
-		this.hotelAddressService = hotelAddressService;
+	public HotelAddressController(HotelAddressApiServiceImpl hotelAddressApiServiceImpl) {
+		this.hotelAddressApiServiceImpl = hotelAddressApiServiceImpl;
 	}
 
 	protected HotelAddressController() {
@@ -56,7 +56,7 @@ public class HotelAddressController {
 			LOGGER.info("Input for hotel address Create {}", input);
 			LOGGER.info("Hotel code {}", hotelCode);
 		}
-		return hotelAddressService.createHotelAddress(input, hotelCode);
+		return hotelAddressApiServiceImpl.createHotelAddress(input, hotelCode);
 	}
 	
 	@GetMapping
@@ -67,7 +67,7 @@ public class HotelAddressController {
 			LOGGER.info("Hotel code {}", hotelCode);
 		}
 		
-		return hotelAddressService.getAllAddresses(hotelCode);
+		return hotelAddressApiServiceImpl.getAllAddresses(hotelCode);
 	}
 	
 	@GetMapping(params = "address_type")
@@ -78,7 +78,7 @@ public class HotelAddressController {
 			LOGGER.info("Address Type {}", address_type);
 			LOGGER.info("Hotel code {}", hotelCode);
 		}
-		return hotelAddressService.getAddressByType(hotelCode, address_type);
+		return hotelAddressApiServiceImpl.getAddressByType(hotelCode, address_type);
 	}
 	
 	
@@ -92,7 +92,7 @@ public class HotelAddressController {
 			LOGGER.info("Hotel code {}", hotelCode);
 		}
 		
-		return hotelAddressService.updateHotelAddress(input, hotelCode);
+		return hotelAddressApiServiceImpl.updateHotelAddress(input, hotelCode);
 	}
 
 	@DeleteMapping()
@@ -103,7 +103,7 @@ public class HotelAddressController {
 			LOGGER.info("Hotel code {}", hotelCode);
 		}
 		
-		hotelAddressService.deleteAllHotelAddresses(hotelCode);
+		hotelAddressApiServiceImpl.deleteAllHotelAddresses(hotelCode);
 	}
 
 	@DeleteMapping(params = { "address_type" })
@@ -115,7 +115,7 @@ public class HotelAddressController {
 			LOGGER.info("Hotel code {}", hotelCode);
 		}
 		
-		hotelAddressService.deleteHotelAddress(hotelCode, address_type);
+		hotelAddressApiServiceImpl.deleteHotelAddress(hotelCode, address_type);
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)

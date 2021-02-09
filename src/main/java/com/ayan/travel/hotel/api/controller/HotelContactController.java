@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ayan.travel.hotel.api.dto.HotelContactRequestDTO;
 
-import com.ayan.travel.hotel.api.service.HotelContactService;
+import com.ayan.travel.hotel.api.service.HotelContactApiServiceImpl;
 import com.ayan.travel.hotel.entity.HotelContact;
 import com.ayan.travel.hotel.exception.ElementExistsException;
 import com.ayan.travel.hotel.exception.ElementUpdatedException;
@@ -30,11 +30,11 @@ import com.ayan.travel.hotel.exception.InputMappingException;
 @RequestMapping(path = "hotel/{hotel_code}/contact")
 public class HotelContactController {
 
-	private HotelContactService hotelContactService;
+	private HotelContactApiServiceImpl hotelContactApiServiceImpl;
 
 	@Autowired
-	public HotelContactController(HotelContactService hotelContactService) {
-		this.hotelContactService = hotelContactService;
+	public HotelContactController(HotelContactApiServiceImpl hotelContactApiServiceImpl) {
+		this.hotelContactApiServiceImpl = hotelContactApiServiceImpl;
 	}
 
 	protected HotelContactController() {
@@ -45,19 +45,19 @@ public class HotelContactController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public HotelContact createHotelContact(@RequestBody @Validated HotelContactRequestDTO input,
 			@PathVariable("hotel_code") String hotelCode) {
-		return hotelContactService.createHotelContact(input, hotelCode);
+		return hotelContactApiServiceImpl.createHotelContact(input, hotelCode);
 	}
 	
 	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
 	public List<HotelContact> getHotelContact(@PathVariable("hotel_code") String hotelCode) {
-		return hotelContactService.getAllContacts(hotelCode);
+		return hotelContactApiServiceImpl.getAllContacts(hotelCode);
 	}
 	
 	@GetMapping(params = "address_type")
 	@ResponseStatus(HttpStatus.OK)
 	public HotelContact getHotelContact(@PathVariable("hotel_code") String hotelCode, @RequestParam String address_type) {
-		return hotelContactService.getContactByType(hotelCode, address_type);
+		return hotelContactApiServiceImpl.getContactByType(hotelCode, address_type);
 	}
 	
 	
@@ -65,19 +65,19 @@ public class HotelContactController {
 	@ResponseStatus(HttpStatus.OK)
 	public HotelContact updateHotelContact(@RequestBody @Validated HotelContactRequestDTO input,
 			@PathVariable("hotel_code") String hotelCode) {
-		return hotelContactService.updateHotelContact(input, hotelCode);
+		return hotelContactApiServiceImpl.updateHotelContact(input, hotelCode);
 	}
 
 	@DeleteMapping()
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteAllHotelContact(@PathVariable("hotel_code") String hotelCode) {
-		hotelContactService.deleteAllHotelContacts(hotelCode);
+		hotelContactApiServiceImpl.deleteAllHotelContacts(hotelCode);
 	}
 
 	@DeleteMapping(params = { "address_type" })
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteHotelContact(@PathVariable("hotel_code") String hotelCode, @RequestParam String address_type) {
-		hotelContactService.deleteHotelContact(hotelCode, address_type);
+		hotelContactApiServiceImpl.deleteHotelContact(hotelCode, address_type);
 	}
 
 	@ResponseStatus(HttpStatus.NOT_FOUND)

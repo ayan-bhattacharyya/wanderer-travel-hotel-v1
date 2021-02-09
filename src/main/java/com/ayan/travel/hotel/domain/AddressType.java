@@ -1,7 +1,10 @@
 package com.ayan.travel.hotel.domain;
 
+import java.util.NoSuchElementException;
+
 public enum AddressType {
-	H("Hotel Address"), C("Contact Address"), P("Potal Address");
+	H("Home Address"), C("Contact Address"), P("Potal Address"),
+	B("Biiling Address"), O("Office Address"), ;
 
 	public final String label;
 
@@ -15,7 +18,7 @@ public enum AddressType {
 				return at;
 			}
 		}
-		throw new RuntimeException("No Enum value exists for " + label);
+		throw new NoSuchElementException("No Enum value exists for " + label);
 	}
 
 	public String getLabel() {

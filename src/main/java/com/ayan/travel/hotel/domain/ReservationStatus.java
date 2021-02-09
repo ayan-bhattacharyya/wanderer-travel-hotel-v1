@@ -2,17 +2,18 @@ package com.ayan.travel.hotel.domain;
 
 import java.util.NoSuchElementException;
 
-public enum Status {
-	A("Active"), I("Inactive");
+public enum ReservationStatus {
+	P("Pending Payment"), B("Booked"),
+	C("Cancelled"), R("Rejected");
 
 	public final String label;
 
-	private Status(String label) {
+	private ReservationStatus(String label) {
 		this.label = label;
 	}
 
-	public static Status findByLabel(String label) {
-		for (Status st : Status.values()) {
+	public static ReservationStatus findByLabel(String label) {
+		for (ReservationStatus st : ReservationStatus.values()) {
 			if (st.label.equals(label)) {
 				return st;
 			}

@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.travel.hotel</groupId>
-	<artifactId>hotel-v2</artifactId>
+	<artifactId>wander-travel-hotel-v1</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>hotel</name>
 	<description>Spring Boot Application for Wanderer Travel Hotel</description>

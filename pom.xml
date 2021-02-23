@@ -8,8 +8,8 @@
 		<version>2.4.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ayan.wander-travel</groupId>
-	<artifactId>wt-hotel-v1</artifactId>
+	<groupId>com.travel.hotel</groupId>
+	<artifactId>hotel-v2</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>hotel</name>
 	<description>Spring Boot Application for Wanderer Travel Hotel</description>
@@ -31,6 +31,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security -->
+		<dependency>
+    		<groupId>org.springframework.boot</groupId>
+    		<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -56,7 +61,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
-        
+        <!-- https://mvnrepository.com/artifact/com.auth0/java-jwt -->
+		<dependency>
+    		<groupId>com.auth0</groupId>
+    		<artifactId>java-jwt</artifactId>
+    		<version>3.7.0</version>
+		</dependency>
         <dependency>
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>

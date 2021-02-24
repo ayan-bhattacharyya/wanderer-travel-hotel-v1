@@ -36,8 +36,9 @@ public class Constants {
 	public static final String USER_USERNAME_NOT_EXISTS ="An user with the requested username doesn't exist in the system";
 	public static final String USER_EMAIL_EXISTS ="An user with the requested email exists in the system";
 	public static final String USER_MOBILE_EXISTS ="An user with the requested mobile exists in the system";
-	
 	public static final String RESOURCE_UPDATED = "The requested resource has already been updated by another user since it is been read";
+	
+	public static final String USER_CREATE_URI= "/users*";
 	
 	
 

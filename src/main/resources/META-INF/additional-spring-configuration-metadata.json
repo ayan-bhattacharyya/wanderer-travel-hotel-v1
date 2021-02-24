@@ -1,0 +1,187 @@
+{"properties": [
+  {
+    "name": "api.constant.date-formatter",
+    "type": "java.lang.String",
+    "description": "A description for 'api.constant.date-formatter'"
+  },
+  {
+    "name": "api.constant.hotel-code-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.constant.hotel-code-missing'"
+  },
+  {
+    "name": "api.constant.hotel-name-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.constant.hotel-name-missing'"
+  },
+  {
+    "name": "api.constant.hotel-address-type-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.constant.hotel-address-type-missing'"
+  },
+  {
+    "name": "api.constant.hotel-address-line-1-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.constant.hotel-address-line-1-missing'"
+  },
+  {
+    "name": "api.constant.hotel-city-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.constant.hotel-city-missing'"
+  },
+  {
+    "name": "api.constant.hotel-state-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.constant.hotel-state-missing'"
+  },
+  {
+    "name": "api.constant.hotel-country-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.constant.hotel-country-missing'"
+  },
+  {
+    "name": "api.constant.hotel-contact-type-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.constant.hotel-contact-type-missing'"
+  },
+  {
+    "name": "api.constant.hotel-contact-value-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.constant.hotel-contact-value-missing'"
+  },
+  {
+    "name": "api.field-validation.date-formatter",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.date-formatter'"
+  },
+  {
+    "name": "api.field-validation.hotel-code-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.hotel-code-missing'"
+  },
+  {
+    "name": "api.field-validation.hotel-name-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.hotel-name-missing'"
+  },
+  {
+    "name": "api.field-validation.hotel-address-type-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.hotel-address-type-missing'"
+  },
+  {
+    "name": "api.field-validation.hotel-address-line-1-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.hotel-address-line-1-missing'"
+  },
+  {
+    "name": "api.field-validation.hotel-city-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.hotel-city-missing'"
+  },
+  {
+    "name": "api.field-validation.hotel-state-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.hotel-state-missing'"
+  },
+  {
+    "name": "api.field-validation.hotel-country-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.hotel-country-missing'"
+  },
+  {
+    "name": "api.field-validation.hotel-contact-type-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.hotel-contact-type-missing'"
+  },
+  {
+    "name": "api.field-validation.hotel-contact-value-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.hotel-contact-value-missing'"
+  },
+  {
+    "name": "api.field-validation.user-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.user-missing'"
+  },
+  {
+    "name": "api.field-validation.hotel-postcode-missing",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.hotel-postcode-missing'"
+  },
+  {
+    "name": "api.business-validation.resource-updated",
+    "type": "java.lang.String",
+    "description": "A description for 'api.business-validation.resource-updated'"
+  },
+  {
+    "name": "api.business-validation.resource-not-exists",
+    "type": "java.lang.String",
+    "description": "A description for 'api.business-validation.resource-not-exists'"
+  },
+  {
+    "name": "api.business-validation.hotel-exists",
+    "type": "java.lang.String",
+    "description": "A description for 'api.business-validation.hotel-exists'"
+  },
+  {
+    "name": "api.business-validation.hotel-address-exists",
+    "type": "java.lang.String",
+    "description": "A description for 'api.business-validation.hotel-address-exists'"
+  },
+  {
+    "name": "api.business-validation.hotel-contact-exists",
+    "type": "java.lang.String",
+    "description": "A description for 'api.business-validation.hotel-contact-exists'"
+  },
+  {
+    "name": "api.business-validation.hotel-not-exist",
+    "type": "java.lang.String",
+    "description": "A description for 'api.business-validation.hotel-not-exist'"
+  },
+  {
+    "name": "api.business-validation.hotel-address-not-exists",
+    "type": "java.lang.String",
+    "description": "A description for 'api.business-validation.hotel-address-not-exists'"
+  },
+  {
+    "name": "api.business-validation.hotel-contact-not-exists",
+    "type": "java.lang.String",
+    "description": "A description for 'api.business-validation.hotel-contact-not-exists'"
+  },
+  {
+    "name": "api.field-validation.date-time-format",
+    "type": "java.lang.String",
+    "description": "A description for 'api.field-validation.date-time-format'"
+  },
+  {
+    "name": "app.file-storage.bucketname",
+    "type": "java.lang.String",
+    "description": "A description for 'app.file-storage.bucketname'"
+  },
+  {
+    "name": "app.file-storage.key",
+    "type": "java.lang.String",
+    "description": "A description for 'app.file-storage.key'"
+  },
+  {
+    "name": "api.business-validation.hotel-not-exists",
+    "type": "java.lang.String",
+    "description": "A description for 'api.business-validation.hotel-not-exists'"
+  },
+  {
+    "name": "app.security.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'app.security.secret'"
+  },
+  {
+    "name": "app.security.header",
+    "type": "java.lang.String",
+    "description": "A description for 'app.security.header'"
+  },
+  {
+    "name": "app.security.expire",
+    "type": "java.lang.String",
+    "description": "A description for 'app.security.expire'"
+  }
+]}

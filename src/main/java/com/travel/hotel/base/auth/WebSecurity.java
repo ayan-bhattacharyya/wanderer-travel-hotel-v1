@@ -12,6 +12,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.travel.hotel.base.domain.Constants;
 import com.travel.hotel.base.service.UserDetailsServiceImpl;
 
 @EnableWebSecurity
@@ -27,7 +28,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 	
 	@Override
     protected void configure(HttpSecurity http) throws Exception {
-		http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, "/users/sign-up*").permitAll()
+		http.cors().and().csrf().disable().authorizeRequests().antMatchers(HttpMethod.POST, Constants.USER_CREATE_URI).permitAll()
 		.anyRequest().authenticated().and()
 		.addFilter(new AuthenticationFilter(authenticationManager()))
 		.addFilter(new AuthorizationFilter(authenticationManager()))

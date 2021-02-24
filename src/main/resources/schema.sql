@@ -69,24 +69,6 @@ CREATE TABLE user (
   modified_by VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE user_address (
-  id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  user_id BIGINT,
-  type CHAR(1) NOT NULL,
-  address_line_1 VARCHAR(100) NOT NULL,
-  address_line_2 VARCHAR(100) NOT NULL,
-  address_line_3 VARCHAR(100) NOT NULL,
-  address_line_4 VARCHAR(100) NOT NULL,
-  state VARCHAR(100) NOT NULL,
-  postcode VARCHAR(100) NOT NULL,
-  country VARCHAR(100) NOT NULL,
-  created_at VARCHAR(50) NOT NULL,
-  created_by VARCHAR(100) NOT NULL,
-  modified_at VARCHAR(50) not null,
-  modified_by VARCHAR(100) NOT NULL
-);
-ALTER TABLE user_address ADD FOREIGN KEY (user_id) REFERENCES user(id);
-
 CREATE TABLE room_reservation (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   room_id BIGINT,

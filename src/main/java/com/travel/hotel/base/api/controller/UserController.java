@@ -1,4 +1,4 @@
-package com.travel.hotel.base.controller;
+package com.travel.hotel.base.api.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +20,7 @@ public class UserController {
 		this.userSignupService = userSignupService;
 	}
 	
-	@PostMapping("/sign-up")
+	@PostMapping
     public ApplicationUser signUp(@RequestBody UserDTO request) {
 		return userSignupService.signUp(request);
     }

@@ -6,23 +6,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.travel.hotel.base.api.dto.UserDTO;
+import com.travel.hotel.base.api.service.UserCrudServiceImpl;
 import com.travel.hotel.base.entity.ApplicationUser;
-import com.travel.hotel.base.service.UserSignUpServiceImpl;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 	
-	private UserSignUpServiceImpl userSignupService;
+	private UserCrudServiceImpl userCrudServiceImpl;
 	
-	
-	public UserController(UserSignUpServiceImpl userSignupService) {
-		this.userSignupService = userSignupService;
+	public UserController(UserCrudServiceImpl userCrudServiceImpl) {
+		this.userCrudServiceImpl = userCrudServiceImpl;
 	}
 	
 	@PostMapping
     public ApplicationUser signUp(@RequestBody UserDTO request) {
-		return userSignupService.signUp(request);
+		return userCrudServiceImpl.createUser(request);
     }
 	
 	

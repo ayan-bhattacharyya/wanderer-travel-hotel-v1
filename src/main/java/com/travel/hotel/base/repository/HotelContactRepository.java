@@ -14,6 +14,8 @@ import com.travel.hotel.base.entity.HotelContact;
 @RepositoryRestResource(exported = false)
 public interface HotelContactRepository extends CrudRepository<HotelContact, Long> {
 
+	List<HotelContact> findByHotelAndTypeAndIsPrimary(Hotel hotel, ContactType type, Boolean isPrimary);
+	
 	List<HotelContact> findByHotelAndType(Hotel hotel, ContactType type);
 
 	List<HotelContact> findByHotel(Hotel hotel);

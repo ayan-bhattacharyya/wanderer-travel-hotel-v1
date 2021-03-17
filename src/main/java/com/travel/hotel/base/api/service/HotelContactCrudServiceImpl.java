@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.travel.hotel.base.api.dto.HotelContactDTO;
@@ -19,7 +18,6 @@ import com.travel.hotel.base.exception.ElementExistsException;
 import com.travel.hotel.base.exception.ElementUpdatedException;
 import com.travel.hotel.base.exception.InputMappingException;
 import com.travel.hotel.base.repository.HotelContactRepository;
-import com.travel.hotel.base.service.DateTimeService;
 
 @Service
 public class HotelContactCrudServiceImpl {
@@ -39,10 +37,21 @@ public class HotelContactCrudServiceImpl {
 
 	public HotelContact createHotelContact(HotelContactDTO input, String hotelCode) {
 		Hotel hotel = validateAndGetHotel(input, hotelCode);
-
-		return hotelContactRepository
-				.save(new HotelContact.HotelContactBuilder().withHotel(hotel).withType(input.getContactType())
-						.withValue(input.getContactValue()).withCreatedBy(input.getUser()).build());
+		
+		if(!input.getIsPrimary()) {
+			return hotelContactRepository
+					.save(new HotelContact.HotelContactBuilder().withHotel(hotel).withType(input.getContactType())
+							.withIsPrimary(input.getIsPrimary()).withValue(input.getContactValue()).withCreatedBy(input.getUser()).build());
+		} else {
+			HotelContact primaryContact = getPrimaryContactByType(hotel, input.getContactType());
+			if(primaryContact == null) {
+				return hotelContactRepository
+						.save(new HotelContact.HotelContactBuilder().withHotel(hotel).withType(input.getContactType())
+								.withIsPrimary(input.getIsPrimary()).withValue(input.getContactValue()).withCreatedBy(input.getUser()).build());
+			} else {
+				throw new ElementExistsException(Constants.PRIMARTY_HOTEL_CONTACT_EXISTS);
+			}
+		}
 	}
 
 	public HotelContact updateHotelContact(HotelContactDTO input, String hotelCode) {
@@ -62,7 +71,10 @@ public class HotelContactCrudServiceImpl {
 				throw new ElementUpdatedException(Constants.RESOURCE_UPDATED);
 			} else if (StringUtils.isBlank(hotelContact.getModifiedAt())
 					|| input.getReadDateTime().equals(hotelContact.getModifiedAt())) {
-				hotelContact.setValue(input.getContactValue());
+				if(StringUtils.isNotBlank(input.getContactValue())) {
+					hotelContact.setValue(input.getContactValue());
+				}
+				hotelContact.setIsPrimary(input.getIsPrimary());
 				hotelContact.setModifiedAt();
 				hotelContact.setModifiedBy(input.getUser());
 
@@ -100,7 +112,7 @@ public class HotelContactCrudServiceImpl {
 		}
 	}
 
-	HotelContact getContactByType(Hotel hotel, String contactType) {
+	private HotelContact getContactByType(Hotel hotel, String contactType) {
 
 		if (hotelContactRepository.findByHotelAndType(hotel, ContactType.findByLabel(contactType)).size() == 0) {
 			return null;
@@ -115,11 +127,30 @@ public class HotelContactCrudServiceImpl {
 			return hotelContact;
 		}
 	}
+	
+	private HotelContact getPrimaryContactByType(Hotel hotel, String contactType) {
+
+		if (hotelContactRepository.findByHotelAndTypeAndIsPrimary(hotel, ContactType.findByLabel(contactType), Boolean.TRUE).size() == 0) {
+			return null;
+		} else if (hotelContactRepository.findByHotelAndTypeAndIsPrimary(hotel, ContactType.findByLabel(contactType), Boolean.TRUE).size() > 1) {
+			throw new RuntimeException("More than one hotel Address exists for the contact type " + contactType);
+		} else {
+			HotelContact hotelContact = hotelContactRepository
+					.findByHotelAndTypeAndIsPrimary(hotel, ContactType.findByLabel(contactType), Boolean.TRUE).get(0);
+			if (LOGGER.isInfoEnabled()) {
+				LOGGER.info("Hotel contact details {}", hotelContact);
+			}
+			return hotelContact;
+		}
+	}
 
 	private Hotel validateAndGetHotel(HotelContactDTO input, String hotelCode) {
 		if (StringUtils.isBlank(input.getContactType())) {
 			throw new InputMappingException(Constants.HOTEL_CONTACT_TYPE_MISSING);
 
+		} else if (input.getIsPrimary() == null) {
+			throw new InputMappingException(Constants.HOTEL_CONTACT_PRIMARY_MISSING);
+			
 		} else if (StringUtils.isBlank(input.getContactValue())) {
 			throw new InputMappingException(Constants.HOTEL_CONTACT_MISSING);
 

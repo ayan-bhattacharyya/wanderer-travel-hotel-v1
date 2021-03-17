@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.travel.hotel.base.api.dto.HotelDTO;
 import com.travel.hotel.base.domain.Constants;
+import com.travel.hotel.base.domain.Status;
 import com.travel.hotel.base.entity.Hotel;
 import com.travel.hotel.base.exception.ElementExistsException;
 import com.travel.hotel.base.exception.ElementUpdatedException;
@@ -16,6 +17,7 @@ import com.travel.hotel.base.exception.InputMappingException;
 import com.travel.hotel.base.repository.HotelAddressRepository;
 import com.travel.hotel.base.repository.HotelContactRepository;
 import com.travel.hotel.base.repository.HotelRepository;
+import com.travel.hotel.base.repository.RoomRepository;
 
 @Service
 public class HotelCrudServiceImpl {
@@ -23,13 +25,15 @@ public class HotelCrudServiceImpl {
 	private HotelRepository hotelRepository;
 	private HotelAddressRepository hotelAddressRepository;
 	private HotelContactRepository hotelContactRepository;
+	private RoomRepository roomRepository;
 
 	@Autowired
 	public HotelCrudServiceImpl(HotelRepository hotelRepository, HotelAddressRepository hotelAddressRepository,
-			HotelContactRepository hotelContactRepository) {
+			HotelContactRepository hotelContactRepository, RoomRepository roomRepository) { 
 		this.hotelRepository = hotelRepository;
 		this.hotelAddressRepository = hotelAddressRepository;
 		this.hotelContactRepository = hotelContactRepository;
+		this.roomRepository = roomRepository;
 	}
 
 	protected Hotel getHotelByCode(String code) {
@@ -52,17 +56,21 @@ public class HotelCrudServiceImpl {
 	public Hotel createHotel(HotelDTO input) {
 
 		validateMandatoryFields(input);
+		
+		String status;
+		if(StringUtils.isNotBlank(input.getStatus())) {
+			status = "Active";
+		} else {
+			status = input.getStatus();
+		}
 
 		if (getHotelByCode(input.getHotelCode()) != null) {
 			throw new ElementExistsException(Constants.HOTEL_EXISTS);
-
-		} else if (StringUtils.isBlank(input.getStatus())) {
-			return hotelRepository.save(new Hotel.HotelBuilder().withCode(input.getHotelCode())
-					.withName(input.getHotelName()).withStatus("Active").withCreatedBy(input.getUser()).build());
+			
 		} else {
 			return hotelRepository
 					.save(new Hotel.HotelBuilder().withCode(input.getHotelCode()).withName(input.getHotelName())
-							.withStatus(input.getStatus()).withCreatedBy(input.getUser()).build());
+							.withStatus(status).withCreatedBy(input.getUser()).build());
 		}
 	}
 
@@ -86,7 +94,13 @@ public class HotelCrudServiceImpl {
 
 			} else if (StringUtils.isBlank(hotel.getModifiedAt())
 					|| input.getReadDateTime().equals(hotel.getModifiedAt())) {
-				hotel.setName(input.getHotelName());
+				
+				if(StringUtils.isNotBlank(input.getHotelName())) {
+					hotel.setName(input.getHotelName());
+				}
+				if(StringUtils.isNotBlank(input.getStatus())) {
+					hotel.setStatus(Status.findByLabel(input.getStatus()));
+				}
 				hotel.setModifiedAt();
 				hotel.setModifiedBy(input.getUser());
 				return hotelRepository.save(hotel);
@@ -106,6 +120,7 @@ public class HotelCrudServiceImpl {
 
 	public void deleteHotel(String code) {
 		Hotel hotel = getHotelByCode(code);
+		
 		if (hotel == null) {
 			throw new NoSuchElementException(Constants.HOTEL_NOT_EXISTS);
 
@@ -116,6 +131,8 @@ public class HotelCrudServiceImpl {
 			} else if (hotelContactRepository.findByHotel(hotel).size() > 0) {
 				throw new ElementExistsException(Constants.HOTEL_CONTACT_EXISTS);
 
+			} else if(roomRepository.findByHotel(hotel).size() > 0) {
+				throw new ElementExistsException(Constants.ROOM_EXISTS);
 			} else {
 				hotelRepository.delete(hotel);
 			}

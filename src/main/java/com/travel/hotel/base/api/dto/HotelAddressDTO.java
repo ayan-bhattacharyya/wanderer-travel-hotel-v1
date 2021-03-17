@@ -6,6 +6,9 @@ public class HotelAddressDTO {
 
 	@JsonProperty("addressType")
 	private String addressType;
+	
+	@JsonProperty("isPrimary")
+	private Boolean isPrimary;
 
 	@JsonProperty("addressLine1")
 	private String addressLine1;
@@ -40,6 +43,14 @@ public class HotelAddressDTO {
 
 	public void setAddressType(String addressType) {
 		this.addressType = addressType;
+	}
+
+	public Boolean getIsPrimary() {
+		return isPrimary;
+	}
+
+	public void setIsPrimary(Boolean isPrimary) {
+		this.isPrimary = isPrimary;
 	}
 
 	public String getAddressLine1() {

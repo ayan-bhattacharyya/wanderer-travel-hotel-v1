@@ -20,7 +20,7 @@ import com.travel.hotel.base.service.DateTimeService;
 
 @Entity
 @Table(name = "room_reservation")
-public class RoomReservation implements Serializable {
+public class Reservation implements Serializable {
 
 	private static final long serialVersionUID = -4055371429256019034L;
 
@@ -57,6 +57,12 @@ public class RoomReservation implements Serializable {
 
 	@Column(name = "agent")
 	private String agent;
+	
+	@Column(name = "booking_fare")
+	private Double bookingFare;
+	
+	@Column(name = "booking_amount")
+	private Double bookingAmount;
 
 	@Column(name = "created_at", nullable = false)
 	private String createdAt;
@@ -70,10 +76,11 @@ public class RoomReservation implements Serializable {
 	@Column(name = "modified_by")
 	private String modifiedBy;
 
-	protected RoomReservation() {}
+	protected Reservation() {}
 	
-	protected RoomReservation(Room room, ApplicationUser user, ReservationStatus status, Date startDate, Date endDate,
-			String email, String mobile, String extReference, String agent, String createdBy) {
+	protected Reservation(Room room, ApplicationUser user, ReservationStatus status, Date startDate, Date endDate,
+			String email, String mobile, String extReference, String agent, Double bookingFare, Double bookingAmount,
+			String createdBy) {
 		super();
 		this.room = room;
 		this.status = status;
@@ -83,6 +90,8 @@ public class RoomReservation implements Serializable {
 		this.mobile = mobile;
 		this.extReference = extReference;
 		this.agent = agent;
+		this.bookingFare = bookingFare;
+		this.bookingAmount = bookingAmount;
 		this.createdAt = new DateTimeService().getDateTime(Constants.DATE_FORMAT);
 		this.createdBy = createdBy;
 	}
@@ -155,6 +164,22 @@ public class RoomReservation implements Serializable {
 		this.agent = agent;
 	}
 
+	public Double getBookingFare() {
+		return bookingFare;
+	}
+
+	public void setBookingFare(Double bookingFare) {
+		this.bookingFare = bookingFare;
+	}
+
+	public Double getBookingAmount() {
+		return bookingAmount;
+	}
+
+	public void setBookingAmount(Double bookingAmount) {
+		this.bookingAmount = bookingAmount;
+	}
+
 	public String getCreatedAt() {
 		return createdAt;
 	}
@@ -167,8 +192,8 @@ public class RoomReservation implements Serializable {
 		return modifiedAt;
 	}
 
-	public void setModifiedAt(String modifiedAt) {
-		this.modifiedAt = modifiedAt;
+	public void setModifiedAt() {
+		this.modifiedAt = new DateTimeService().getDateTime(Constants.DATE_FORMAT);
 	}
 
 	public String getModifiedBy() {
@@ -189,6 +214,8 @@ public class RoomReservation implements Serializable {
 		private String mobile;
 		private String extReference;
 		private String agent;
+		private Double bookingFare;
+		private Double bookingAmount;
 		private String createdBy;
 
 		public RoomReservationBuilder withRoom(final Room room) {
@@ -235,15 +262,25 @@ public class RoomReservation implements Serializable {
 			this.agent = agent;
 			return this;
 		}
+		
+		public RoomReservationBuilder withBookingFare(final Double bookingFare) {
+			this.bookingFare = bookingFare;
+			return this;
+		}
+		
+		public RoomReservationBuilder withBookingAmount(final Double bookingAmount) {
+			this.bookingAmount = bookingAmount;
+			return this;
+		}
 
 		public RoomReservationBuilder withCreatedBy(final String createdBy) {
 			this.createdBy = createdBy;
 			return this;
 		}
 
-		public RoomReservation build() {
-			return new RoomReservation(room, user, ReservationStatus.findByLabel(status), startDate, endDate, email,
-					mobile, extReference, agent, createdBy);
+		public Reservation build() {
+			return new Reservation(room, user, ReservationStatus.findByLabel(status), startDate, endDate, email,
+					mobile, extReference, agent, bookingFare, bookingAmount, createdBy);
 
 		}
 
@@ -265,7 +302,7 @@ public class RoomReservation implements Serializable {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		RoomReservation reservation = (RoomReservation) o;
+		Reservation reservation = (Reservation) o;
 		return Objects.equals(id, reservation.id) && Objects.equals(room, reservation.room)
 				&& Objects.equals(user, reservation.user) && Objects.equals(startDate, reservation.startDate)
 				&& status == reservation.status && Objects.equals(endDate, reservation.endDate)

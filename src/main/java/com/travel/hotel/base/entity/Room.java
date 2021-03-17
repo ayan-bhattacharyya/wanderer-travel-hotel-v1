@@ -42,9 +42,6 @@ public class Room implements Serializable {
 	@Column(name = "type", nullable = false)
 	private RoomType type;
 
-	@Column(name = "tariff", nullable = false)
-	private double tariff;
-
 	@Column(name = "status", nullable = false)
 	private Status status;
 
@@ -62,13 +59,12 @@ public class Room implements Serializable {
 
 	protected Room() {}
 
-	protected Room(Hotel hotel, String name, String number, RoomType type, double tariff, Status status,
+	protected Room(Hotel hotel, String name, String number, RoomType type, Status status,
 			String createdBy) {
 		this.hotel = hotel;
 		this.name = name;
 		this.number = number;
 		this.type = type;
-		this.tariff = tariff;
 		this.status = status;
 		this.createdAt = new DateTimeService().getDateTime(Constants.DATE_FORMAT);
 		;
@@ -95,24 +91,12 @@ public class Room implements Serializable {
 		return number;
 	}
 
-	public void setNumber(String number) {
-		this.number = number;
-	}
-
 	public RoomType getType() {
 		return type;
 	}
 
 	public void setType(RoomType type) {
 		this.type = type;
-	}
-
-	public double getTariff() {
-		return tariff;
-	}
-
-	public void setTariff(double tariff) {
-		this.tariff = tariff;
 	}
 
 	public Status getStatus() {
@@ -135,8 +119,8 @@ public class Room implements Serializable {
 		return modifiedAt;
 	}
 
-	public void setModifiedAt(String modifiedAt) {
-		this.modifiedAt = modifiedAt;
+	public void setModifiedAt() {
+		this.modifiedAt = new DateTimeService().getDateTime(Constants.DATE_FORMAT);
 	}
 
 	public String getModifiedBy() {
@@ -152,7 +136,6 @@ public class Room implements Serializable {
 		private String name;
 		private String number;
 		private String type;
-		private Double tariff;
 		private String status;
 		private String createdBy;
 
@@ -176,11 +159,6 @@ public class Room implements Serializable {
 			return this;
 		}
 
-		public RoomBuilder withTariff(final Double tariff) {
-			this.tariff = tariff;
-			return this;
-		}
-
 		public RoomBuilder withStatus(final String status) {
 			this.status = status;
 			return this;
@@ -192,7 +170,7 @@ public class Room implements Serializable {
 		}
 
 		public Room build() {
-			return new Room(hotel, name, number, RoomType.findByLabel(type), tariff, Status.findByLabel(status),
+			return new Room(hotel, name, number, RoomType.findByLabel(type), Status.findByLabel(status),
 					createdBy);
 		}
 
@@ -201,7 +179,7 @@ public class Room implements Serializable {
 	@Override
 	public String toString() {
 		return "Hotel Room {" + ", Room Id ='" + id + '\'' + ", Room Name ='" + name + '\'' + ", Room Number ='"
-				+ number + '\'' + ", Room Type ='" + type + '\'' + ", Tariff ='" + tariff + '\'' + ", Status ='"
+				+ number + '\'' + ", Room Type ='" + type + '\'' + ", Status ='"
 				+ status + '\'' + ", Created at ='" + createdAt + '\'' + ", Created by ='" + createdBy + '\''
 				+ ", Modified at ='" + modifiedAt + '\'' + ", Modified by ='" + modifiedBy + '\'' + '}';
 	}
@@ -214,7 +192,7 @@ public class Room implements Serializable {
 			return false;
 		Room room = (Room) o;
 		return Objects.equals(id, room.id) && Objects.equals(hotel, room.hotel) && Objects.equals(name, room.name)
-				&& Objects.equals(number, room.number) && type == room.type && Objects.equals(tariff, room.tariff)
+				&& Objects.equals(number, room.number) && type == room.type
 				&& status == room.status && Objects.equals(createdAt, room.createdAt)
 				&& Objects.equals(createdBy, room.createdBy) && Objects.equals(modifiedAt, room.modifiedAt)
 				&& Objects.equals(modifiedBy, room.modifiedBy);

@@ -21,6 +21,8 @@ public interface HotelAddressRepository extends CrudRepository<HotelAddress, Lon
 	List<HotelAddress> findByState(String state);
 
 	List<HotelAddress> findByHotel(Hotel hotel);
-
+	
 	List<HotelAddress> findByHotelAndType(Hotel hotel, AddressType type);
+
+	List<HotelAddress> findByHotelAndTypeAndIsPrimary(Hotel hotel, AddressType type, Boolean isPrimary);
 }

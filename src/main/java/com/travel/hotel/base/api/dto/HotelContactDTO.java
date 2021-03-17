@@ -6,6 +6,9 @@ public class HotelContactDTO {
 
 	@JsonProperty("contactType")
 	private String contactType;
+	
+	@JsonProperty("isPrimary")
+	private Boolean isPrimary;
 
 	@JsonProperty("contactValue")
 	private String contactValue;
@@ -22,6 +25,14 @@ public class HotelContactDTO {
 
 	public void setContactType(String contactType) {
 		this.contactType = contactType;
+	}
+	
+	public Boolean getIsPrimary() {
+		return isPrimary;
+	}
+
+	public void setIsPrimary(Boolean isPrimary) {
+		this.isPrimary = isPrimary;
 	}
 
 	public String getContactValue() {

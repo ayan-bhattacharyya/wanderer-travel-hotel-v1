@@ -16,6 +16,8 @@ public interface RoomRepository extends CrudRepository<Room, Long> {
 	
 	List<Room> findByHotel(Hotel hotel);
 	
+	List<Room> findByHotelAndNumber(Hotel hotel, String number);
+	
 	List<Room> findByType(RoomType type);
 	
 	

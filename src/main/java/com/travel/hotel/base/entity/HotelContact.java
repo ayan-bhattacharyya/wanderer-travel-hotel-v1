@@ -30,6 +30,9 @@ public class HotelContact implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "hotel_id")
 	private Hotel hotel;
+	
+	@Column(name = "is_primary", nullable = false)
+	private Boolean isPrimary;
 
 	@Column(name = "type", nullable = false)
 	private ContactType type;
@@ -51,10 +54,11 @@ public class HotelContact implements Serializable {
 
 	protected HotelContact() {}
 	
-	protected HotelContact(Hotel hotel, ContactType type, String value, String createdBy) {
+	protected HotelContact(Hotel hotel, ContactType type, String value, Boolean isPrimary, String createdBy) {
 		this.hotel = hotel;
 		this.type = type;
 		this.value = value;
+		this.isPrimary = isPrimary;
 		this.createdAt = new DateTimeService().getDateTime(Constants.DATE_FORMAT);
 		this.createdBy = createdBy;
 	}
@@ -77,6 +81,14 @@ public class HotelContact implements Serializable {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+	
+	public Boolean getIsPrimary() {
+		return isPrimary;
+	}
+
+	public void setIsPrimary(Boolean isPrimary) {
+		this.isPrimary = isPrimary;
 	}
 
 	public String getCreatedAt() {
@@ -107,6 +119,7 @@ public class HotelContact implements Serializable {
 		private Hotel hotel;
 		private String type;
 		private String value;
+		private Boolean isPrimary;
 		private String createdBy;
 
 		public HotelContactBuilder withHotel(final Hotel hotel) {
@@ -123,6 +136,11 @@ public class HotelContact implements Serializable {
 			this.value = value;
 			return this;
 		}
+		
+		public HotelContactBuilder withIsPrimary(final Boolean isPrimary) {
+			this.isPrimary = isPrimary;
+			return this;
+		}
 
 		public HotelContactBuilder withCreatedBy(final String createdBy) {
 			this.createdBy = createdBy;
@@ -130,7 +148,7 @@ public class HotelContact implements Serializable {
 		}
 
 		public HotelContact build() {
-			return new HotelContact(hotel, ContactType.findByLabel(type), value, createdBy);
+			return new HotelContact(hotel, ContactType.findByLabel(type), value, isPrimary, createdBy);
 		}
 
 	}
@@ -138,7 +156,8 @@ public class HotelContact implements Serializable {
 	@Override
 	public String toString() {
 		return "Hotel Contact{" + ", Hotel Contact Id ='" + id + '\'' + ", Hotel Contact Type ='" + type + '\''
-				+ ", Hotel Contact Value ='" + value + '\'' + ", Created at ='" + createdAt + '\'' + ", Created by ='"
+				+ ", Hotel Contact Value ='" + value + '\'' + ", Primary Hotel Address Type ='" + isPrimary + '\''
+				+ ", Created at ='" + createdAt + '\'' + ", Created by ='"
 				+ createdBy + '\'' + ", Modified at ='" + modifiedAt + '\'' + ", Modified by ='" + modifiedBy + '\''
 				+ '}';
 	}
@@ -152,6 +171,7 @@ public class HotelContact implements Serializable {
 		HotelContact hotelContact = (HotelContact) o;
 		return Objects.equals(id, hotelContact.id) && Objects.equals(hotel, hotelContact.hotel)
 				&& type == hotelContact.type && Objects.equals(value, hotelContact.value)
+				&& Objects.equals(isPrimary, hotelContact.isPrimary)
 				&& Objects.equals(createdAt, hotelContact.createdAt)
 				&& Objects.equals(createdBy, hotelContact.createdBy)
 				&& Objects.equals(modifiedAt, hotelContact.modifiedAt)

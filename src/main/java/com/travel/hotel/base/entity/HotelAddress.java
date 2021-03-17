@@ -33,6 +33,9 @@ public class HotelAddress implements Serializable {
 
 	@Column(name = "type", nullable = false)
 	private AddressType type;
+	
+	@Column(name = "is_primary", nullable = false)
+	private Boolean isPrimary;
 
 	@Column(name = "address_line_1", nullable = false)
 	private String addressLine1;
@@ -69,10 +72,11 @@ public class HotelAddress implements Serializable {
 
 	protected HotelAddress() {}
 	
-	protected HotelAddress(Hotel hotel, AddressType type, String addressLine1, String addressLine2, String addressLine3,
+	protected HotelAddress(Hotel hotel, AddressType type, Boolean isPrimary, String addressLine1, String addressLine2, String addressLine3,
 			String city, String state, String postcode, String country, String createdBy) {
 		this.hotel = hotel;
 		this.type = type;
+		this.isPrimary = isPrimary;
 		this.addressLine1 = addressLine1;
 		this.addressLine2 = addressLine2;
 		this.addressLine3 = addressLine3;
@@ -94,6 +98,14 @@ public class HotelAddress implements Serializable {
 
 	public AddressType getType() {
 		return type;
+	}
+
+	public Boolean getIsPrimary() {
+		return isPrimary;
+	}
+
+	public void setIsPrimary(Boolean isPrimary) {
+		this.isPrimary = isPrimary;
 	}
 
 	public String getAddressLine1() {
@@ -179,6 +191,7 @@ public class HotelAddress implements Serializable {
 	public static class HotelAddressBuilder {
 		private Hotel hotel;
 		private String type;
+		private Boolean isPrimary;
 		private String addressLine1;
 		private String addressLine2;
 		private String addressLine3;
@@ -195,6 +208,11 @@ public class HotelAddress implements Serializable {
 
 		public HotelAddressBuilder withType(final String type) {
 			this.type = type;
+			return this;
+		}
+		
+		public HotelAddressBuilder withIsPrimary(final Boolean isPrimary) {
+			this.isPrimary = isPrimary;
 			return this;
 		}
 
@@ -239,7 +257,7 @@ public class HotelAddress implements Serializable {
 		}
 
 		public HotelAddress build() {
-			return new HotelAddress(hotel, AddressType.findByLabel(type), addressLine1, addressLine2, addressLine3,
+			return new HotelAddress(hotel, AddressType.findByLabel(type), isPrimary, addressLine1, addressLine2, addressLine3,
 					city, state, postcode, country, createdBy);
 		}
 	}
@@ -247,6 +265,7 @@ public class HotelAddress implements Serializable {
 	@Override
 	public String toString() {
 		return "Hotel Address {" + ", Hotel Address Id ='" + id + '\'' + ", Hotel Address Type ='" + type + '\''
+				+ ", Primary Hotel Address Type ='" + isPrimary + '\''
 				+ ", Hotel Address Line 1 ='" + addressLine1 + '\'' + ", Hotel Address Line 2 ='" + addressLine2 + '\''
 				+ ", Hotel Address Line 3 ='" + addressLine3 + '\'' + ", city ='" + city + '\'' + ", State ='" + state
 				+ '\'' + ", Postcode ='" + postcode + '\'' + ", Country ='" + country + '\'' + ", Created at ='"
@@ -262,7 +281,9 @@ public class HotelAddress implements Serializable {
 			return false;
 		HotelAddress hotelAddress = (HotelAddress) o;
 		return Objects.equals(id, hotelAddress.id) && Objects.equals(hotel, hotelAddress.hotel)
-				&& type == hotelAddress.type && Objects.equals(addressLine1, hotelAddress.addressLine1)
+				&& type == hotelAddress.type 
+				&& Objects.equals(isPrimary, hotelAddress.isPrimary)
+				&& Objects.equals(addressLine1, hotelAddress.addressLine1)
 				&& Objects.equals(addressLine2, hotelAddress.addressLine2)
 				&& Objects.equals(addressLine3, hotelAddress.addressLine3) && Objects.equals(city, hotelAddress.city)
 				&& Objects.equals(state, hotelAddress.state) && Objects.equals(postcode, hotelAddress.postcode)
